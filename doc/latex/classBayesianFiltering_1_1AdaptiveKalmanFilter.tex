@@ -1,0 +1,221 @@
+\doxysection{Bayesian\+Filtering\+::Adaptive\+Kalman\+Filter Class Reference}
+\hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter}{}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter}\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+
+
+Adaptive Kalman filter, with {\ttfamily Q} and {\ttfamily R} matrices changing when every measurement comes according two user supplied learning parameters.  
+
+
+
+
+{\ttfamily \#include $<$bayesianfiltering.\+hpp$>$}
+
+
+
+Inheritance diagram for Bayesian\+Filtering\+::Adaptive\+Kalman\+Filter\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{classBayesianFiltering_1_1AdaptiveKalmanFilter__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Bayesian\+Filtering\+::Adaptive\+Kalman\+Filter\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{classBayesianFiltering_1_1AdaptiveKalmanFilter__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aedec8b91199061791f6cf3c33def837a}{\texorpdfstring{$\sim$}{\string~}\+Adaptive\+Kalman\+Filter}} ()
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a78c095f1083f91f996e8a83a53bcf179}{Reset}} (\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&linear\+\_\+model, double \+\_\+alpha, double \+\_\+beta)
+\begin{DoxyCompactList}\small\item\em Reset filter with user supplied filter specific parameters. Must be called before the prediction/correction cycle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_af93c0d4309d5f4cd0719ddf14826d7cb}{Reset}} (\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&linear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Reset filter with default filter specific parameters ({\ttfamily alpha} = 0.\+95 and {\ttfamily beta} = 0.\+99). Must be called before the prediction/correction cycle. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_af416d14b868be1a526f1b924754790f4}{Prediction}} (Eigen\+::\+Vector\+Xd \&U, \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&linear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Prediction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on input vector {\ttfamily U} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_abff8a1858d8fa6f4a62db083e2ad5630}{Correction}} (Eigen\+::\+Vector\+Xd \&Y, \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&linear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Correction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on measurement vector {\ttfamily Y} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{Bayesian\+Filtering\+::\+Linear\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a9ac4ad8a042aa374cd3ed5e70705c59f}{\texorpdfstring{$\sim$}{\string~}\+Linear\+Bayesian\+Filter}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3}{Bayesian\+Filter}} ()
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8}{\texorpdfstring{$\sim$}{\string~}\+Bayesian\+Filter}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}{alpha}}
+\begin{DoxyCompactList}\small\item\em User supplied learning parameter for updating {\ttfamily R} measurement noise covariance matrix. Must be in interval \mbox{]}0,1\mbox{]}, with 1 leading to fixed {\ttfamily R} matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}{beta}}
+\begin{DoxyCompactList}\small\item\em User supplied learning parameter for updating {\ttfamily Q} process noise covariance matrix. Must be in interval \mbox{]}0,1\mbox{]}, with 1 leading to fixed {\ttfamily Q} matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}
+\begin{DoxyCompactList}\small\item\em State vector predictor {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k-\/1) or estimate {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}
+\begin{DoxyCompactList}\small\item\em State vector error covariance matrix predictor {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k-\/1) or {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{Bayesian\+Filtering\+::\+Linear\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{Check\+Model}} (\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&linear\+\_\+model)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{Reset}} (Eigen\+::\+Vector\+Xd \&X0, Eigen\+::\+Matrix\+Xd \&P0, int Nx, int Ny)
+\begin{DoxyCompactList}\small\item\em Reset filter, first procedure before prediction/correction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Adaptive Kalman filter, with {\ttfamily Q} and {\ttfamily R} matrices changing when every measurement comes according two user supplied learning parameters. 
+
+This implementation is specific for discrete time, continuous state models. ~\newline
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_aedec8b91199061791f6cf3c33def837a}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_aedec8b91199061791f6cf3c33def837a} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!````~AdaptiveKalmanFilter@{\texorpdfstring{$\sim$}{\string~}AdaptiveKalmanFilter}}
+\index{````~AdaptiveKalmanFilter@{\texorpdfstring{$\sim$}{\string~}AdaptiveKalmanFilter}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}AdaptiveKalmanFilter()}{\string~AdaptiveKalmanFilter()}}
+{\footnotesize\ttfamily virtual Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::\texorpdfstring{$\sim$}{\string~}\+Adaptive\+Kalman\+Filter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_abff8a1858d8fa6f4a62db083e2ad5630}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_abff8a1858d8fa6f4a62db083e2ad5630} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!Correction@{Correction}}
+\index{Correction@{Correction}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Correction()}{Correction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::\+Correction (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{Y,  }\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&}]{linear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Correction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on measurement vector {\ttfamily Y} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Y} & measurement vector of the linear system process model \\
+\hline
+\mbox{\texttt{ in}}  & {\em linear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} object for which the filter will run \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a9879fce56c43d5213d32d34fd0faf13f}{Bayesian\+Filtering\+::\+Linear\+Bayesian\+Filter}}.
+
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_af416d14b868be1a526f1b924754790f4}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_af416d14b868be1a526f1b924754790f4} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!Prediction@{Prediction}}
+\index{Prediction@{Prediction}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Prediction()}{Prediction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::\+Prediction (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&}]{linear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Prediction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on input vector {\ttfamily U} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em U} & input vector of the linear system process model \\
+\hline
+\mbox{\texttt{ in}}  & {\em linear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} object for which the filter will run \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a4b62173eb897efca57f4d1828c00b4ac}{Bayesian\+Filtering\+::\+Linear\+Bayesian\+Filter}}.
+
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_af93c0d4309d5f4cd0719ddf14826d7cb}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_af93c0d4309d5f4cd0719ddf14826d7cb} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!Reset@{Reset}}
+\index{Reset@{Reset}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Reset()}{Reset()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::\+Reset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&}]{linear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reset filter with default filter specific parameters ({\ttfamily alpha} = 0.\+95 and {\ttfamily beta} = 0.\+99). Must be called before the prediction/correction cycle. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em linear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} object for which the filter will run \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab46cbdebe15455725ee636eb8de64f13}{Bayesian\+Filtering\+::\+Linear\+Bayesian\+Filter}}.
+
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_a78c095f1083f91f996e8a83a53bcf179}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_a78c095f1083f91f996e8a83a53bcf179} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!Reset@{Reset}}
+\index{Reset@{Reset}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Reset()}{Reset()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::\+Reset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} \&}]{linear\+\_\+model,  }\item[{double}]{\+\_\+alpha,  }\item[{double}]{\+\_\+beta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Reset filter with user supplied filter specific parameters. Must be called before the prediction/correction cycle. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em linear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}} object for which the filter will run \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+alpha} & user provided value for {\ttfamily alpha} member variable \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+beta} & user provided value for {\ttfamily beta} member variable \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!alpha@{alpha}}
+\index{alpha@{alpha}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{alpha}{alpha}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::alpha}
+
+
+
+User supplied learning parameter for updating {\ttfamily R} measurement noise covariance matrix. Must be in interval \mbox{]}0,1\mbox{]}, with 1 leading to fixed {\ttfamily R} matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}\label{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721} 
+\index{BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}!beta@{beta}}
+\index{beta@{beta}!BayesianFiltering::AdaptiveKalmanFilter@{BayesianFiltering::AdaptiveKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{beta}{beta}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Adaptive\+Kalman\+Filter\+::beta}
+
+
+
+User supplied learning parameter for updating {\ttfamily Q} process noise covariance matrix. Must be in interval \mbox{]}0,1\mbox{]}, with 1 leading to fixed {\ttfamily Q} matrix. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{bayesianfiltering_8hpp}{bayesianfiltering.\+hpp}}\end{DoxyCompactItemize}

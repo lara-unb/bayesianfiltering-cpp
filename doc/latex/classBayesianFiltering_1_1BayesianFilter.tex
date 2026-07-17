@@ -1,0 +1,217 @@
+\doxysection{Bayesian\+Filtering\+::Bayesian\+Filter Class Reference}
+\hypertarget{classBayesianFiltering_1_1BayesianFilter}{}\label{classBayesianFiltering_1_1BayesianFilter}\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+
+
+Base class of minimum variables of a Bayesian stochastic filter. All derived classes present filters for linear and nonlinear models. All filters follow the following loop.  
+
+
+
+
+{\ttfamily \#include $<$bayesianfiltering.\+hpp$>$}
+
+
+
+Inheritance diagram for Bayesian\+Filtering\+::Bayesian\+Filter\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classBayesianFiltering_1_1BayesianFilter__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3}{Bayesian\+Filter}} ()
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8}{\texorpdfstring{$\sim$}{\string~}\+Bayesian\+Filter}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}
+\begin{DoxyCompactList}\small\item\em State vector predictor {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k-\/1) or estimate {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}
+\begin{DoxyCompactList}\small\item\em State vector error covariance matrix predictor {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k-\/1) or {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{Reset}} (Eigen\+::\+Vector\+Xd \&X0, Eigen\+::\+Matrix\+Xd \&P0, int Nx, int Ny)
+\begin{DoxyCompactList}\small\item\em Reset filter, first procedure before prediction/correction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base class of minimum variables of a Bayesian stochastic filter. All derived classes present filters for linear and nonlinear models. All filters follow the following loop. 
+
+
+\begin{DoxyEnumerate}
+\item Reset
+\item Prediction\+: compute x(k\texorpdfstring{$\vert$}{|}k-\/1) using x(k-\/1) and input u(k)
+\item Correction, in case of measurement available\+: compute x(k\texorpdfstring{$\vert$}{|}k) using x(k\texorpdfstring{$\vert$}{|}k-\/1) and measurement vector y(k);
+\item In case of filter divergence, performe necessary actions and go back to step 1. Otherwise, go back to step 2.
+\end{DoxyEnumerate}
+
+As it can be seen, as described above correction is optional, which allows filter continuing by prediction. Internal member variables present the current filter state.
+
+System model object should be not used in other purposes other than to be used as input to the filter. For the case of linear time varying models, it can have their parameters directly updated just before calling prediction/correction methods, as a way to deal with time varying systems. For the case of nonlinear time varying models, parameters updating is done in derived model class, where the methods are called from inside filter object. Thus, model updating is done in derived class, being not necessary to be done by the user. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3}\label{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!BayesianFilter@{BayesianFilter}}
+\index{BayesianFilter@{BayesianFilter}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{BayesianFilter()}{BayesianFilter()}}
+{\footnotesize\ttfamily Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+Bayesian\+Filter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8}\label{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!````~BayesianFilter@{\texorpdfstring{$\sim$}{\string~}BayesianFilter}}
+\index{````~BayesianFilter@{\texorpdfstring{$\sim$}{\string~}BayesianFilter}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}BayesianFilter()}{\string~BayesianFilter()}}
+{\footnotesize\ttfamily virtual Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\texorpdfstring{$\sim$}{\string~}\+Bayesian\+Filter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}\label{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!Reset@{Reset}}
+\index{Reset@{Reset}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{Reset()}{Reset()}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+Reset (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X0,  }\item[{Eigen\+::\+Matrix\+Xd \&}]{P0,  }\item[{int}]{Nx,  }\item[{int}]{Ny }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Reset filter, first procedure before prediction/correction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em X0} & inicial state vector mean value of {\ttfamily x(0)} distribution \\
+\hline
+\mbox{\texttt{ in}}  & {\em P0} & inicial state error covariance matrix of {\ttfamily x(0)} distribution \\
+\hline
+\mbox{\texttt{ in}}  & {\em Nx} & Number of state variables in vector {\ttfamily X} \\
+\hline
+\mbox{\texttt{ in}}  & {\em Ny} & Number of measurements in vector {\ttfamily Y} \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}\label{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!d2\_corrected@{d2\_corrected}}
+\index{d2\_corrected@{d2\_corrected}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{d2\_corrected}{d2\_corrected}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Bayesian\+Filter\+::d2\+\_\+corrected}
+
+
+
+Corrected innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}\label{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!d2\_predicted@{d2\_predicted}}
+\index{d2\_predicted@{d2\_predicted}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{d2\_predicted}{d2\_predicted}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Bayesian\+Filter\+::d2\+\_\+predicted}
+
+
+
+Predicted innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}\label{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!P@{P}}
+\index{P@{P}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{P}{P}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::P}
+
+
+
+State vector error covariance matrix predictor {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k-\/1) or {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}\label{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!S\_corrected@{S\_corrected}}
+\index{S\_corrected@{S\_corrected}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{S\_corrected}{S\_corrected}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+S\+\_\+corrected}
+
+
+
+Corrected innovation covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}\label{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!S\_predicted@{S\_predicted}}
+\index{S\_predicted@{S\_predicted}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{S\_predicted}{S\_predicted}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+S\+\_\+predicted}
+
+
+
+Predicted innovation covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}\label{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!V\_corrected@{V\_corrected}}
+\index{V\_corrected@{V\_corrected}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{V\_corrected}{V\_corrected}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+V\+\_\+corrected}
+
+
+
+Corrected innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}\label{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!V\_predicted@{V\_predicted}}
+\index{V\_predicted@{V\_predicted}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{V\_predicted}{V\_predicted}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+V\+\_\+predicted}
+
+
+
+Predicted innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}\label{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!X@{X}}
+\index{X@{X}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{X}{X}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::X}
+
+
+
+State vector predictor {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k-\/1) or estimate {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}\label{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!Y\_corrected@{Y\_corrected}}
+\index{Y\_corrected@{Y\_corrected}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{Y\_corrected}{Y\_corrected}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+Y\+\_\+corrected}
+
+
+
+Corrected measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). 
+
+\Hypertarget{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}\label{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb} 
+\index{BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}!Y\_predicted@{Y\_predicted}}
+\index{Y\_predicted@{Y\_predicted}!BayesianFiltering::BayesianFilter@{BayesianFiltering::BayesianFilter}}
+\doxysubsubsection{\texorpdfstring{Y\_predicted}{Y\_predicted}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+Bayesian\+Filter\+::\+Y\+\_\+predicted}
+
+
+
+Predicted measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{bayesianfiltering_8hpp}{bayesianfiltering.\+hpp}}\end{DoxyCompactItemize}

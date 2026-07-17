@@ -1,0 +1,371 @@
+\doxysection{Bayesian\+Filtering\+::State\+Space\+Nonlinear\+Model\+Base Class Reference}
+\hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+
+
+Represents the parameters of a discrete time, generic nonlinear state space model\+: ~\newline
+  
+
+
+
+
+{\ttfamily \#include $<$bayesianfiltering.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab9236deb2e5493274d0b1dea895c765e}{\texorpdfstring{$\sim$}{\string~}\+State\+Space\+Nonlinear\+Model\+Base}} ()=default
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a6d1bb119f39ba8cd51493921f8562c02}{Set\+Dimensions}} (int \+\_\+\+Nx, int \+\_\+\+Nu, int \+\_\+\+Ny, int \+\_\+\+Nw, int \+\_\+\+Nv)
+\begin{DoxyCompactList}\small\item\em Define dimensions of system variables and adjust size of model parameters accordingly. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}{Process\+Model}} (Eigen\+::\+Vector\+Xd \&X, Eigen\+::\+Vector\+Xd \&U, double t, Eigen\+::\+Vector\+Xd \&W)=0
+\begin{DoxyCompactList}\small\item\em Compute process model to update state vector {\ttfamily X} (in place). Virtual function to be defined in derived class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{Measurement\+Model}} (Eigen\+::\+Vector\+Xd \&Y, Eigen\+::\+Vector\+Xd \&X, double t, Eigen\+::\+Vector\+Xd \&V)=0
+\begin{DoxyCompactList}\small\item\em Compute system output {\ttfamily Y} from measurement model. Virtual function to be defined in derived class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a154eb44be88baac00b007f5ea15a97c2}{UpdatedfdX}} (Eigen\+::\+Vector\+Xd \&X, Eigen\+::\+Vector\+Xd \&U, double t, Eigen\+::\+Vector\+Xd \&W)=0
+\begin{DoxyCompactList}\small\item\em Update dfdX internal class member, the process model derivative with respect to {\ttfamily x}(k-\/1). Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abc5e22725ed3add0028d5df2c64723de}{UpdatedfdW}} (Eigen\+::\+Vector\+Xd \&X, Eigen\+::\+Vector\+Xd \&U, double t, Eigen\+::\+Vector\+Xd \&W)=0
+\begin{DoxyCompactList}\small\item\em Update dfdW internal class member, the process model derivative with respect to {\ttfamily w(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653}{UpdatedhdX}} (Eigen\+::\+Vector\+Xd \&X, double t, Eigen\+::\+Vector\+Xd \&V)=0
+\begin{DoxyCompactList}\small\item\em Update dhdX internal class member, the measurement model derivative with respect to {\ttfamily x(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f}{UpdatedhdV}} (Eigen\+::\+Vector\+Xd \&X, double t, Eigen\+::\+Vector\+Xd \&V)=0
+\begin{DoxyCompactList}\small\item\em Update dhdV internal class member, the measurement model derivative with respect to {\ttfamily v(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}{dfdX}}
+\begin{DoxyCompactList}\small\item\em Partial derivative of f(\+X,\+U,\+W) with respect to X. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}}
+\begin{DoxyCompactList}\small\item\em Partial derivative of f(\+X,\+U,\+W) with respect to W. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}
+\begin{DoxyCompactList}\small\item\em Partial derivative of h(\+X,\+V) with respect to X. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}
+\begin{DoxyCompactList}\small\item\em Partial derivative of h(\+X,\+V) with respect to V. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}}
+\begin{DoxyCompactList}\small\item\em Process model noise covariance matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}
+\begin{DoxyCompactList}\small\item\em Measurement model noise covariance matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}}
+\begin{DoxyCompactList}\small\item\em Inicial state vector distribution mean vector parameter. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}}
+\begin{DoxyCompactList}\small\item\em Inicial state vector distribution covariance matrix parameter. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}}
+\begin{DoxyCompactList}\small\item\em Number of state variables in X vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a3a542b38e8233b99b2c078660db1c49e}{Nu}}
+\begin{DoxyCompactList}\small\item\em Number of inputs in U vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}}
+\begin{DoxyCompactList}\small\item\em Number of measurements in Y vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}}
+\begin{DoxyCompactList}\small\item\em Number of process noise in W vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}}
+\begin{DoxyCompactList}\small\item\em Number of measurement noise in V vector. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the parameters of a discrete time, generic nonlinear state space model\+: ~\newline
+ 
+
+\begin{DoxyVerb}    x(k) = f(x(k-1),u(k),w(k)) {Process equation}
+
+    y(k) = h(x(k),v(k)) {Measurement equation}
+\end{DoxyVerb}
+ with {\ttfamily x(k)} being state variables vector, {\ttfamily u(k)} measurement vector and {\ttfamily y(k)} measurement vector. Also, {\ttfamily w(k)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(0,\+Q)} and {\ttfamily v(k)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(0,\+R)} are respectively process and measurement noises.
+
+This class contains only model parameters. It is a base virtual class, with computation of process and measurement equations as virtual member functions. Its definition should be done in a derived class at user side. Partial derivatives of process and measurement models should also be defined at a derived class. Some filters use such derivatives.
+
+Initial state is a random variable following {\ttfamily x(0)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(\+X0,\+P0)} 
+
+Also dim(x) = {\ttfamily Nx}, dim(u) = {\ttfamily Nu}, dim(y) = {\ttfamily Ny}, dim(w) = {\ttfamily Nw}, dim(v) = {\ttfamily Nv}. These dimensions should be first stablished by calling {\ttfamily Set\+Dimmensions()}, which make resizing of system parameters. After that, since parameters are public, they can be set at any time. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab9236deb2e5493274d0b1dea895c765e}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab9236deb2e5493274d0b1dea895c765e} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!````~StateSpaceNonlinearModelBase@{\texorpdfstring{$\sim$}{\string~}StateSpaceNonlinearModelBase}}
+\index{````~StateSpaceNonlinearModelBase@{\texorpdfstring{$\sim$}{\string~}StateSpaceNonlinearModelBase}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}StateSpaceNonlinearModelBase()}{\string~StateSpaceNonlinearModelBase()}}
+{\footnotesize\ttfamily virtual Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\texorpdfstring{$\sim$}{\string~}\+State\+Space\+Nonlinear\+Model\+Base (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!MeasurementModel@{MeasurementModel}}
+\index{MeasurementModel@{MeasurementModel}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{MeasurementModel()}{MeasurementModel()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Measurement\+Model (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{Y,  }\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{V }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Compute system output {\ttfamily Y} from measurement model. Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em Y} & the computed output \\
+\hline
+\mbox{\texttt{ in}}  & {\em X} & state vector with {\ttfamily x(k)} \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em V} & current sample of measurement noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!ProcessModel@{ProcessModel}}
+\index{ProcessModel@{ProcessModel}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{ProcessModel()}{ProcessModel()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Process\+Model (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{W }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Compute process model to update state vector {\ttfamily X} (in place). Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em X} & state vector with {\ttfamily x}(k-\/1) to be updated to {\ttfamily x(k)} \\
+\hline
+\mbox{\texttt{ in}}  & {\em U} & input vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em W} & current sample of process noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a6d1bb119f39ba8cd51493921f8562c02}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a6d1bb119f39ba8cd51493921f8562c02} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!SetDimensions@{SetDimensions}}
+\index{SetDimensions@{SetDimensions}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{SetDimensions()}{SetDimensions()}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Set\+Dimensions (\begin{DoxyParamCaption}\item[{int}]{\+\_\+\+Nx,  }\item[{int}]{\+\_\+\+Nu,  }\item[{int}]{\+\_\+\+Ny,  }\item[{int}]{\+\_\+\+Nw,  }\item[{int}]{\+\_\+\+Nv }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Define dimensions of system variables and adjust size of model parameters accordingly. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nx} & Number of state variables in X vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nu} & Number of inputs in U vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Ny} & Number of measurements in Y vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nw} & Number of process noise in W vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nv} & Number of measurement noise in V vector \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abc5e22725ed3add0028d5df2c64723de}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abc5e22725ed3add0028d5df2c64723de} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!UpdatedfdW@{UpdatedfdW}}
+\index{UpdatedfdW@{UpdatedfdW}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{UpdatedfdW()}{UpdatedfdW()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+UpdatedfdW (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{W }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Update dfdW internal class member, the process model derivative with respect to {\ttfamily w(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em X} & state vector containing {\ttfamily x}(k-\/1) \\
+\hline
+\mbox{\texttt{ in}}  & {\em U} & input vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em W} & current sample of process noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a154eb44be88baac00b007f5ea15a97c2}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a154eb44be88baac00b007f5ea15a97c2} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!UpdatedfdX@{UpdatedfdX}}
+\index{UpdatedfdX@{UpdatedfdX}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{UpdatedfdX()}{UpdatedfdX()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+UpdatedfdX (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{W }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Update dfdX internal class member, the process model derivative with respect to {\ttfamily x}(k-\/1). Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em X} & state vector containing {\ttfamily x}(k-\/1) \\
+\hline
+\mbox{\texttt{ in}}  & {\em U} & input vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em W} & current sample of process noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!UpdatedhdV@{UpdatedhdV}}
+\index{UpdatedhdV@{UpdatedhdV}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{UpdatedhdV()}{UpdatedhdV()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+UpdatedhdV (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{V }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Update dhdV internal class member, the measurement model derivative with respect to {\ttfamily v(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em X} & state vector containing {\ttfamily x}(k-\/1) \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em V} & current sample of measurement noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!UpdatedhdX@{UpdatedhdX}}
+\index{UpdatedhdX@{UpdatedhdX}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{UpdatedhdX()}{UpdatedhdX()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+UpdatedhdX (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{double}]{t,  }\item[{Eigen\+::\+Vector\+Xd \&}]{V }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Update dhdX internal class member, the measurement model derivative with respect to {\ttfamily x(k)}. Necessary only in filters using system matrix derivatives, where this function is called from inside the filter class. Virtual function to be defined in derived class. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em X} & state vector containing {\ttfamily x}(k-\/1) \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time instant scalar \\
+\hline
+\mbox{\texttt{ in}}  & {\em V} & current sample of measurement noise \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!dfdW@{dfdW}}
+\index{dfdW@{dfdW}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{dfdW}{dfdW}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::dfdW}
+
+
+
+Partial derivative of f(\+X,\+U,\+W) with respect to W. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!dfdX@{dfdX}}
+\index{dfdX@{dfdX}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{dfdX}{dfdX}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::dfdX}
+
+
+
+Partial derivative of f(\+X,\+U,\+W) with respect to X. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!dhdV@{dhdV}}
+\index{dhdV@{dhdV}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{dhdV}{dhdV}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::dhdV}
+
+
+
+Partial derivative of h(\+X,\+V) with respect to V. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!dhdX@{dhdX}}
+\index{dhdX@{dhdX}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{dhdX}{dhdX}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::dhdX}
+
+
+
+Partial derivative of h(\+X,\+V) with respect to X. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a3a542b38e8233b99b2c078660db1c49e}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a3a542b38e8233b99b2c078660db1c49e} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Nu@{Nu}}
+\index{Nu@{Nu}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Nu}{Nu}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Nu}
+
+
+
+Number of inputs in U vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Nv@{Nv}}
+\index{Nv@{Nv}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Nv}{Nv}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Nv}
+
+
+
+Number of measurement noise in V vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Nw@{Nw}}
+\index{Nw@{Nw}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Nw}{Nw}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Nw}
+
+
+
+Number of process noise in W vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Nx@{Nx}}
+\index{Nx@{Nx}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Nx}{Nx}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Nx}
+
+
+
+Number of state variables in X vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Ny@{Ny}}
+\index{Ny@{Ny}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Ny}{Ny}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+Ny}
+
+
+
+Number of measurements in Y vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!P0@{P0}}
+\index{P0@{P0}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{P0}{P0}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+P0}
+
+
+
+Inicial state vector distribution covariance matrix parameter. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!Q@{Q}}
+\index{Q@{Q}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{Q}{Q}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::Q}
+
+
+
+Process model noise covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!R@{R}}
+\index{R@{R}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{R}{R}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::R}
+
+
+
+Measurement model noise covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}\label{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96} 
+\index{BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}!X0@{X0}}
+\index{X0@{X0}!BayesianFiltering::StateSpaceNonlinearModelBase@{BayesianFiltering::StateSpaceNonlinearModelBase}}
+\doxysubsubsection{\texorpdfstring{X0}{X0}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+State\+Space\+Nonlinear\+Model\+Base\+::\+X0}
+
+
+
+Inicial state vector distribution mean vector parameter. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{bayesianfiltering_8hpp}{bayesianfiltering.\+hpp}}\end{DoxyCompactItemize}

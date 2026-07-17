@@ -1,0 +1,184 @@
+\doxysection{Bayesian\+Filtering Namespace Reference}
+\hypertarget{namespaceBayesianFiltering}{}\label{namespaceBayesianFiltering}\index{BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter}{Adaptive\+Kalman\+Filter}}
+\begin{DoxyCompactList}\small\item\em Adaptive Kalman filter, with {\ttfamily Q} and {\ttfamily R} matrices changing when every measurement comes according two user supplied learning parameters. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filter}}
+\begin{DoxyCompactList}\small\item\em Base class of minimum variables of a Bayesian stochastic filter. All derived classes present filters for linear and nonlinear models. All filters follow the following loop. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter}{Extended\+Kalman\+Filter}}
+\begin{DoxyCompactList}\small\item\em Extended Kalman filter, the first order approximation-\/based estimator for stochastic nonlinear state space models. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter}{Kalman\+Filter}}
+\begin{DoxyCompactList}\small\item\em Kalman filter, the best optimal unbiased estimator for stochastic linear state space models. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{Linear\+Bayesian\+Filter}}
+\begin{DoxyCompactList}\small\item\em Base class of Bayesian filters for state space linear models. See derived classes. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{Nonlinear\+Bayesian\+Filter}}
+\begin{DoxyCompactList}\small\item\em Base class of Bayesian filters for state space nonlinear models. See derived classes. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter}{Robust\+Self\+Adaptive\+Kalman\+Filter}}
+\begin{DoxyCompactList}\small\item\em Robust Self Adaptive Kalman filter, with {\ttfamily Q} and {\ttfamily R} matrices changing when every measurement comes using covariance matching strategy. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter}{Sampling\+Importance\+Resampling\+Filter}}
+\begin{DoxyCompactList}\small\item\em Sampling Importance Resampling (SIR) filter, particle-\/based estimator for stochastic nonlinear state space models. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{State\+Space\+Linear\+Model}}
+\begin{DoxyCompactList}\small\item\em Represents the parameters of a discrete time, generic linear state space model\+: ~\newline
+ \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}}
+\begin{DoxyCompactList}\small\item\em Represents the parameters of a discrete time, generic nonlinear state space model\+: ~\newline
+ \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter}{Unscented\+Kalman\+Filter}}
+\begin{DoxyCompactList}\small\item\em Unscented Kalman filter, the Unscented Transform (UT)-\/based estimator for stochastic nonlinear state space models. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::pair$<$ bool, std\+::string $>$ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}
+\begin{DoxyCompactList}\small\item\em Encapsulated \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response of a function, with .first specifying status (success of failure) and .second the reason string in case of failure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{Result\+Format}} (bool success, const std\+::string \&message)
+\begin{DoxyCompactList}\small\item\em Format \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response with defined status and reason string. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{namespaceBayesianFiltering_afaeda1b5f087ed85ae0f31a75ae686cc}{Result\+Format}} (bool success, const std\+::string \&format, Args ... args)
+\begin{DoxyCompactList}\small\item\em Format \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response with defined status and reason string to be printf-\/like formated. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{Multivariate\+Zero\+Mean\+Gaussian\+Sampler}} (Eigen\+::\+Vector\+Xd \&sample, Eigen\+::\+Matrix\+Xd \&covariance\+\_\+matrix)
+\begin{DoxyCompactList}\small\item\em Generate multivariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily 0}, {\ttfamily covariance\+\_\+matrix}). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{namespaceBayesianFiltering_aebccc048aae5c766a04cbc2de6db1c9d}{Multivariate\+Gaussian\+Sampler}} (Eigen\+::\+Vector\+Xd \&sample, Eigen\+::\+Vector\+Xd \&mean\+\_\+vector, Eigen\+::\+Matrix\+Xd \&covariance\+\_\+matrix)
+\begin{DoxyCompactList}\small\item\em Generate multivariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily mean\+\_\+vector}, {\ttfamily covariance\+\_\+matrix}). \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespaceBayesianFiltering_a0b3b1756f72d3d0a954fa90fd258e3a5}{Univariate\+Gaussian\+Sampler}} (double mean, double variance)
+\begin{DoxyCompactList}\small\item\em Generate univariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily mean}, {\ttfamily variance}). \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespaceBayesianFiltering_a8cd47b1c16927b0525100a4cbae60a5d}{Univariate\+Uniform\+Sampler}} (double min\+\_\+value, double max\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Generate univariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} U({\ttfamily min\+\_\+value}, {\ttfamily max\+\_\+value}). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}\label{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287} 
+\index{BayesianFiltering@{BayesianFiltering}!Result@{Result}}
+\index{Result@{Result}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{Result}{Result}}
+{\footnotesize\ttfamily typedef std\+::pair$<$bool, std\+::string$>$ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Bayesian\+Filtering\+::\+Result}}}
+
+
+
+Encapsulated \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response of a function, with .first specifying status (success of failure) and .second the reason string in case of failure. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceBayesianFiltering_aebccc048aae5c766a04cbc2de6db1c9d}\label{namespaceBayesianFiltering_aebccc048aae5c766a04cbc2de6db1c9d} 
+\index{BayesianFiltering@{BayesianFiltering}!MultivariateGaussianSampler@{MultivariateGaussianSampler}}
+\index{MultivariateGaussianSampler@{MultivariateGaussianSampler}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{MultivariateGaussianSampler()}{MultivariateGaussianSampler()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Multivariate\+Gaussian\+Sampler (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{sample,  }\item[{Eigen\+::\+Vector\+Xd \&}]{mean\+\_\+vector,  }\item[{Eigen\+::\+Matrix\+Xd \&}]{covariance\+\_\+matrix }\end{DoxyParamCaption})}
+
+
+
+Generate multivariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily mean\+\_\+vector}, {\ttfamily covariance\+\_\+matrix}). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em sample} & will be filled with the outcome \\
+\hline
+\mbox{\texttt{ in}}  & {\em mean\+\_\+vector} & as above \\
+\hline
+\mbox{\texttt{ in}}  & {\em covariance\+\_\+matrix} & as above \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result type 
+\end{DoxyReturn}
+\Hypertarget{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}\label{namespaceBayesianFiltering_a8e53756356570408ba342394af586178} 
+\index{BayesianFiltering@{BayesianFiltering}!MultivariateZeroMeanGaussianSampler@{MultivariateZeroMeanGaussianSampler}}
+\index{MultivariateZeroMeanGaussianSampler@{MultivariateZeroMeanGaussianSampler}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{MultivariateZeroMeanGaussianSampler()}{MultivariateZeroMeanGaussianSampler()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Multivariate\+Zero\+Mean\+Gaussian\+Sampler (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{sample,  }\item[{Eigen\+::\+Matrix\+Xd \&}]{covariance\+\_\+matrix }\end{DoxyParamCaption})}
+
+
+
+Generate multivariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily 0}, {\ttfamily covariance\+\_\+matrix}). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em sample} & will be filled with the outcome \\
+\hline
+\mbox{\texttt{ in}}  & {\em covariance\+\_\+matrix} & as above \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result type 
+\end{DoxyReturn}
+\Hypertarget{namespaceBayesianFiltering_afaeda1b5f087ed85ae0f31a75ae686cc}\label{namespaceBayesianFiltering_afaeda1b5f087ed85ae0f31a75ae686cc} 
+\index{BayesianFiltering@{BayesianFiltering}!ResultFormat@{ResultFormat}}
+\index{ResultFormat@{ResultFormat}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{ResultFormat()}{ResultFormat()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename ... Args$>$ \\
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Result\+Format (\begin{DoxyParamCaption}\item[{bool}]{success,  }\item[{const std\+::string \&}]{format,  }\item[{Args ...}]{args }\end{DoxyParamCaption})}
+
+
+
+Format \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response with defined status and reason string to be printf-\/like formated. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em success} & bool indicating status \\
+\hline
+\mbox{\texttt{ in}}  & {\em format} & formating string \\
+\hline
+\mbox{\texttt{ in}}  & {\em args} & sequence of variable arguments for message formating \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}\label{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04} 
+\index{BayesianFiltering@{BayesianFiltering}!ResultFormat@{ResultFormat}}
+\index{ResultFormat@{ResultFormat}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{ResultFormat()}{ResultFormat()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Result\+Format (\begin{DoxyParamCaption}\item[{bool}]{success,  }\item[{const std\+::string \&}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Format \texorpdfstring{$<$}{<}bool,std\+::string\texorpdfstring{$>$}{>} pair response with defined status and reason string. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em success} & bool indicating status \\
+\hline
+\mbox{\texttt{ in}}  & {\em message} & string message \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespaceBayesianFiltering_a0b3b1756f72d3d0a954fa90fd258e3a5}\label{namespaceBayesianFiltering_a0b3b1756f72d3d0a954fa90fd258e3a5} 
+\index{BayesianFiltering@{BayesianFiltering}!UnivariateGaussianSampler@{UnivariateGaussianSampler}}
+\index{UnivariateGaussianSampler@{UnivariateGaussianSampler}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{UnivariateGaussianSampler()}{UnivariateGaussianSampler()}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Univariate\+Gaussian\+Sampler (\begin{DoxyParamCaption}\item[{double}]{mean,  }\item[{double}]{variance }\end{DoxyParamCaption})}
+
+
+
+Generate univariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} N({\ttfamily mean}, {\ttfamily variance}). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em mean} & as above \\
+\hline
+\mbox{\texttt{ in}}  & {\em variance} & as above \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily sample} 
+\end{DoxyReturn}
+\Hypertarget{namespaceBayesianFiltering_a8cd47b1c16927b0525100a4cbae60a5d}\label{namespaceBayesianFiltering_a8cd47b1c16927b0525100a4cbae60a5d} 
+\index{BayesianFiltering@{BayesianFiltering}!UnivariateUniformSampler@{UnivariateUniformSampler}}
+\index{UnivariateUniformSampler@{UnivariateUniformSampler}!BayesianFiltering@{BayesianFiltering}}
+\doxysubsubsection{\texorpdfstring{UnivariateUniformSampler()}{UnivariateUniformSampler()}}
+{\footnotesize\ttfamily double Bayesian\+Filtering\+::\+Univariate\+Uniform\+Sampler (\begin{DoxyParamCaption}\item[{double}]{min\+\_\+value,  }\item[{double}]{max\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Generate univariate {\ttfamily sample} \texorpdfstring{$\sim$}{\string~} U({\ttfamily min\+\_\+value}, {\ttfamily max\+\_\+value}). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em min\+\_\+value} & as above \\
+\hline
+\mbox{\texttt{ in}}  & {\em max\+\_\+value} & as above \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily sample} 
+\end{DoxyReturn}

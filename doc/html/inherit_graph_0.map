@@ -1,0 +1,19 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classBayesianFiltering_1_1BayesianFilter.html" title="Base class of minimum variables of a Bayesian stochastic filter. All derived classes present filters ..." alt="" coords="5,184,148,224"/>
+<area shape="rect" id="Node000001" href="$classBayesianFiltering_1_1LinearBayesianFilter.html" title="Base class of Bayesian filters for state space linear models. See derived classes." alt="" coords="208,116,363,156"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="151,177,223,153,224,159,152,182"/>
+<area shape="rect" id="Node000005" href="$classBayesianFiltering_1_1NonlinearBayesianFilter.html" title="Base class of Bayesian filters for state space nonlinear models. See derived classes." alt="" coords="196,216,375,256"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="162,214,196,220,195,225,161,220"/>
+<area shape="rect" id="Node000002" href="$classBayesianFiltering_1_1AdaptiveKalmanFilter.html" title="Adaptive Kalman filter, with Q and R matrices changing when every measurement comes according two use..." alt="" coords="459,5,621,45"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="326,106,371,80,422,55,458,42,459,47,424,60,374,84,329,111"/>
+<area shape="rect" id="Node000003" href="$classBayesianFiltering_1_1KalmanFilter.html" title="Kalman filter, the best optimal unbiased estimator for stochastic linear state space models." alt="" coords="469,69,611,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="376,117,468,100,469,105,377,122"/>
+<area shape="rect" id="Node000004" href="$classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter.html" title="Robust Self Adaptive Kalman filter, with Q and R matrices changing when every measurement comes using..." alt="" coords="423,133,657,173"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="377,140,423,143,423,148,376,145"/>
+<area shape="rect" id="Node000006" href="$classBayesianFiltering_1_1ExtendedKalmanFilter.html" title="Extended Kalman filter, the first order approximation&#45;based estimator for stochastic nonlinear state ..." alt="" coords="457,197,623,237"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="388,226,456,221,457,226,389,231"/>
+<area shape="rect" id="Node000007" href="$classBayesianFiltering_1_1SamplingImportanceResamplingFilter.html" title="Sampling Importance Resampling (SIR) filter, particle&#45;based estimator for stochastic nonlinear state ..." alt="" coords="423,262,657,317"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="388,255,423,262,422,267,387,260"/>
+<area shape="rect" id="Node000008" href="$classBayesianFiltering_1_1UnscentedKalmanFilter.html" title="Unscented Kalman filter, the Unscented Transform (UT)&#45;based estimator for stochastic nonlinear state ..." alt="" coords="453,341,627,381"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="323,262,369,296,424,327,454,339,452,344,422,332,367,300,320,267"/>
+</map>
