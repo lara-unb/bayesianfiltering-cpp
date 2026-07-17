@@ -1,14 +1,14 @@
 
 # About this library
 
-This library is developed to be of simple use, requiring only knowledgement on Bayesian filtering and object oriented C++ programming. It is contained in a single \p bayesianfiltering.hpp file.
+This library is developed to be of simple use, requiring only knowledgement on Bayesian filtering and object oriented C++ programming. It is contained in a single bayesianfiltering.hpp file.
 
-It deals with both time varying linear and nonlinear discrete time models. For more details, see the documentation at \p /doc folder.
+It deals with both time varying linear and nonlinear discrete time models. For more details, see the documentation at /doc folder.
 
 
 # Dependencies
 
-The library was developed with little dependence on other libraries or operating system. Some dependencies vary according to the demos provided. See the corresponding \p Readme.md file. 
+The library was developed with little dependence on other libraries or operating system. Some dependencies vary according to the demos provided. See the corresponding Readme.md file. 
 
 ## EIGEN
 
@@ -39,7 +39,7 @@ In doc/latex, in order to generate the pdf documentation just run:
 ```bash
 $ make pdf
 ```
-This will compile latex sources and generate \p doc/latex/refman.pdf
+This will compile latex sources and generate doc/latex/refman.pdf
 
 If latex and pdflatex are not installed in your system, install it.
 
@@ -58,7 +58,7 @@ $ sudo apt install texlive-full
 
 # Demos
 
-At \p demos folder you can find the current usage examples, with folders related to the kind of platform. Explore it! They are well documented. 
+At demos folder you can find the current usage examples, with folders related to the kind of platform. Explore it! They are well documented. 
 
 For instance, Sampling Importance Resampling (SIR) particle filter demo with 1000 particles gererate the following figures:
 
