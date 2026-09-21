@@ -1,0 +1,1100 @@
+\doxysection{bayesianfiltering.\+hpp}
+\hypertarget{bayesianfiltering_8hpp_source}{}\label{bayesianfiltering_8hpp_source}\mbox{\hyperlink{bayesianfiltering_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{/**********************************************************************************************}}
+\DoxyCodeLine{00003\ \textcolor{comment}{***********************************************************************************************}}
+\DoxyCodeLine{00004\ \textcolor{comment}{***\ \ File:\ \ \ \ \ \ \ \ \ \ BayesianFiltering.hpp}}
+\DoxyCodeLine{00005\ \textcolor{comment}{***\ \ Author:\ \ \ \ \ \ \ \ Geovany\ A.\ Borges}}
+\DoxyCodeLine{00006\ \textcolor{comment}{***\ \ Contents:\ \ \ \ \ \ BayesianFiltering\ header\ file.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{***********************************************************************************************}}
+\DoxyCodeLine{00008\ \textcolor{comment}{***********************************************************************************************}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ \ \ BayesianFiltering.hpp\ is\ free\ software:\ you\ can\ redistribute\ it\ and/or\ modify}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ it\ under\ the\ terms\ of\ the\ GNU\ Lesser\ General\ Public\ License\ (LGPL)\ as\ published\ by}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ the\ Free\ Software\ Foundation,\ either\ version\ 3\ of\ the\ License,\ or\ any\ later\ version.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ BayesianFiltering.hpp\ is\ distributed\ in\ the\ hope\ that\ it\ will\ be\ useful,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ but\ WITHOUT\ ANY\ WARRANTY;\ without\ even\ the\ implied\ warranty\ of}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ MERCHANTABILITY\ or\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE.\ \ See\ the}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ GNU\ Lesser\ General\ Public\ License\ for\ more\ details.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ You\ should\ have\ received\ a\ copy\ of\ the\ GNU\ Lesser\ General\ Public\ License}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ along\ with\ BayesianFiltering.hpp.\ \ If\ not,\ see\ <http://www.gnu.org/licenses/>.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ Copyright\ 2020\ Geovany\ Araujo\ Borges}}
+\DoxyCodeLine{00022\ \textcolor{comment}{**********************************************************************************************/}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//******************************************************************}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//**\ Classe\ BayesianFiltering}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//******************************************************************}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <deque>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <Eigen/Dense>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <Eigen/Eigen>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ BayesianFiltering\_H}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ BayesianFiltering\_H}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/***********************************************************************************************}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ \ Auxiliary\ Macros:}}
+\DoxyCodeLine{00038\ \textcolor{comment}{***********************************************************************************************/}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ PRINT\_LINE\_DEBUG\ \{printf("{}\(\backslash\)n[\%s]\ line\ \%i"{},\_\_FILE\_\_,\_\_LINE\_\_);\ fflush(stdout);\}}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bayesianfiltering_8hpp_a5b6e5a4d44c213756150b6d1529a6894}{PrintEigenMatrixXd}}(Eigen::MatrixXd\ \&X,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nMatrix\ \%s\ (\%li\ x\ \%li):"{}},name,X.rows(),X.cols());}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i=0;\ i\ <\ X.rows();\ ++i)\{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ "{}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ j=0;\ j\ <\ X.cols();\ ++j)\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s(\%li,\%li)=\%.10f;\ "{}},name,i,j,X(i,j));}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ PRINT\_EIGEN\_MATRIX(X)\ PrintEigenMatrixXd(X,\#X);\ }}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{bayesianfiltering_8hpp_a3c1ce39569785bfe0b4a76950200aae1}{PrintEigenVectorXd}}(Eigen::VectorXd\ \&X,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name)}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nVector\ \%s\ (\%li\ x\ \%li):"{}},name,X.rows(),X.cols());}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i=0;\ i\ <\ X.rows();\ ++i)\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ \ "{}});}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ j=0;\ j\ <\ X.cols();\ ++j)\{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s(\%li,\%li)=\%.10f;\ "{}},name,i,j,X(i,j));}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{00083\ \}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ PRINT\_EIGEN\_VECTOR(X)\ PrintEigenVectorXd(X,\#X);}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceBayesianFiltering}{BayesianFiltering}}\ \{}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{\ \ \ \ /***********************************************************************************************}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ \ \ \ \ *\ \ Support\ types\ and\ functions:}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ \ \ \ ***********************************************************************************************/}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{typedef}\ std::pair<bool,\ std::string>\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keywordtype}{bool}\ success,\ \textcolor{keyword}{const}\ std::string\&\ message)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(success,\ message);}
+\DoxyCodeLine{00108\ \ \ \ \ \}\ \ \ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...\ Args>}
+\DoxyCodeLine{00117\ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keywordtype}{bool}\ success,\ \textcolor{keyword}{const}\ std::string\&\ format,\ Args\ ...\ args\ )}
+\DoxyCodeLine{00118\ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res;\ res.first\ =\ success;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ size\_s\ =\ std::snprintf(\ \textcolor{keyword}{nullptr},\ 0,\ format.c\_str(),\ args\ ...\ )\ +\ 1;\ \textcolor{comment}{//\ Extra\ space\ for\ '\(\backslash\)0'}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ size\_s\ <=\ 0\ )\{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\ \textcolor{stringliteral}{"{}Error\ during\ formatting."{}}\ );\ \}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ size\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\ size\_s\ );}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ std::unique\_ptr<char[]>\ buf(\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{char}[\ size\ ]\ );}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ std::snprintf(\ buf.get(),\ size,\ format.c\_str(),\ args\ ...\ );}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ res.second\ =\ std::string(\ buf.get(),\ buf.get()\ +\ size\ -\/\ 1\ );\ \textcolor{comment}{//\ We\ don't\ want\ the\ '\(\backslash\)0'\ inside}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00127\ \ \ \ \ \};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00136\ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(Eigen::VectorXd\ \&\ sample,\ Eigen::MatrixXd\ \&\ covariance\_matrix)}
+\DoxyCodeLine{00137\ \ \ \ \ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ std::normal\_distribution<double>\ dist(0.0,\ 1.0);}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Verify\ dimensions}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (covariance\_matrix.rows()\ !=\ covariance\_matrix.cols())\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}covariance\_matrix\ should\ be\ square\ (\%li\ x\ \%li)"{}},covariance\_matrix.rows(),covariance\_matrix.cols());}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ Cholesky\ Decomposition\ (LLT)}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ Eigen::LLT<Eigen::MatrixXd>\ llt(covariance\_matrix);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ L\ =\ llt.matrixL();}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ independent\ standard\ normal\ vector\ Z}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Z\ =\ Eigen::VectorXd::NullaryExpr(covariance\_matrix.rows(),\ [\&]()\ \{\ return\ dist(gen);\ \});}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Transform\ to\ Multivariate\ Normal}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ sample\ =\ L\ *\ Z;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00165\ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{namespaceBayesianFiltering_aebccc048aae5c766a04cbc2de6db1c9d}{MultivariateGaussianSampler}}(Eigen::VectorXd\ \&\ sample,\ Eigen::VectorXd\ \&\ mean\_vector,\ Eigen::MatrixXd\ \&\ covariance\_matrix)}
+\DoxyCodeLine{00166\ \ \ \ \ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Verify\ dimensions}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mean\_vector.rows()\ !=\ covariance\_matrix.rows())\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}mean\_vector\ number\ of\ lines\ (\%li)\ different\ of\ covariance\_matrix\ number\ of\ lines\ (\%li)"{}},mean\_vector.rows(),covariance\_matrix.rows());}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Covariance\ Matrix\ will\ be\ checked\ at\ zero\ mean\ Gaussian\ sampler}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ sample\ from\ zero\ mean\ sample:}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(sample,\ covariance\_matrix);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ sample\ +=\ mean\_vector;}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespaceBayesianFiltering_a0b3b1756f72d3d0a954fa90fd258e3a5}{UnivariateGaussianSampler}}(\textcolor{keywordtype}{double}\ mean,\ \textcolor{keywordtype}{double}\ variance)}
+\DoxyCodeLine{00187\ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ std::normal\_distribution<double>\ dist(0.0,\ 1.0);}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mean\ +\ sqrt(variance)\ *\ dist(gen);}
+\DoxyCodeLine{00193\ \ \ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespaceBayesianFiltering_a8cd47b1c16927b0525100a4cbae60a5d}{UnivariateUniformSampler}}(\textcolor{keywordtype}{double}\ min\_value,\ \textcolor{keywordtype}{double}\ max\_value)}
+\DoxyCodeLine{00202\ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<double>\ dist(0.0,\ 1.0);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dist(gen);}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{comment}{\ \ \ \ /***********************************************************************************************}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ \ \ \ \ *\ \ Linear\ model\ class:}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ \ \ \ ***********************************************************************************************/}}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}}
+\DoxyCodeLine{00236\ \ \ \ \ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}};\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}};\ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}};\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}};\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}};\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}};\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}};\ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0}{Nu}};\ }
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}};\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa79f143468ed38fc47f5c9c7f1d4179b}{Nw}};\ }
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af4404612ae418d30e56bc36c504b3141}{Nv}};\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ std::vector<bool>\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}};\ }
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ std::vector<bool>\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}};\ }
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afa39d7f8c65b6a1843728bf1ce37feb1}{SetDimensions}}(\textcolor{keywordtype}{int}\ \_Nx,\ \textcolor{keywordtype}{int}\ \_Nu,\ \textcolor{keywordtype}{int}\ \_Ny,\ \textcolor{keywordtype}{int}\ \_Nw,\ \textcolor{keywordtype}{int}\ \_Nv)}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}}\ =\ \_Nx;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0}{Nu}}\ =\_Nu;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}}\ =\ \_Ny;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa79f143468ed38fc47f5c9c7f1d4179b}{Nw}}\ =\ \_Nw,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af4404612ae418d30e56bc36c504b3141}{Nv}}\ =\ \_Nv;\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0}{Nu}});}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}});\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}});}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ std::fill(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}.begin(),\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}.end(),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}});}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ std::fill(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}.begin(),\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}.end(),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00283\ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ae05f2373bda70c910c2ed0ce072b1938}{ProcessModel}}(Eigen::VectorXd\ \&\ X,\ Eigen::VectorXd\ \&\ U,\ Eigen::VectorXd\ \&\ W)}
+\DoxyCodeLine{00284\ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xpos;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ Xpos\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ X\ +\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}\ *\ U\ +\ W;\ \textcolor{comment}{//\ By\ using\ an\ auxiliary\ variable,\ it\ avoids\ any\ risk\ of\ copy\ in\ place\ }}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ X\ =\ Xpos;}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00289\ \ \ \ \ \}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00297\ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96b1aa9499678aa3e6eeb205a02d3f37}{MeasurementModel}}(Eigen::VectorXd\ \&\ Y,\ Eigen::VectorXd\ \&\ X,\ Eigen::VectorXd\ \&\ V)}
+\DoxyCodeLine{00298\ \ \ \ \ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ Y\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ X\ +\ V;}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00301\ \ \ \ \ \}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \};}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{comment}{\ \ \ \ /***********************************************************************************************}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ \ \ \ \ *\ \ Nonlinear\ model\ base\ class:}}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ \ \ \ ***********************************************************************************************/}}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}}
+\DoxyCodeLine{00332\ \ \ \ \ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}{dfdX}};\ }
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}};\ }
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}};\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}};\ }
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}};\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}};\ }
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}};\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}};\ }
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}};\ }
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a3a542b38e8233b99b2c078660db1c49e}{Nu}};\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}};\ }
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}};\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}};\ }
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ std::vector<bool>\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}};\ }
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ std::vector<bool>\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}};\ }
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Always\ provide\ a\ virtual\ destructor\ if\ your\ class\ has\ virtual\ functions!}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab9236deb2e5493274d0b1dea895c765e}{\string~StateSpaceNonlinearModelBase}}()\ =\ \textcolor{keywordflow}{default};\ }
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a6d1bb119f39ba8cd51493921f8562c02}{SetDimensions}}(\textcolor{keywordtype}{int}\ \_Nx,\ \textcolor{keywordtype}{int}\ \_Nu,\ \textcolor{keywordtype}{int}\ \_Ny,\ \textcolor{keywordtype}{int}\ \_Nw,\ \textcolor{keywordtype}{int}\ \_Nv)}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}}\ =\ \_Nx;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a3a542b38e8233b99b2c078660db1c49e}{Nu}}\ =\_Nu;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}}\ =\ \_Ny;\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}}\ =\ \_Nw,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}}\ =\ \_Nv;\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}{dfdX}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}});}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}});}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}});}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}});}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ std::fill(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}.begin(),\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}.end(),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}});}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ std::fill(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}.begin(),\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}.end(),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}{ProcessModel}}(Eigen::VectorXd\ \&\ X,\ Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ W)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(Eigen::VectorXd\ \&\ Y,\ Eigen::VectorXd\ \&\ X,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ V)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a154eb44be88baac00b007f5ea15a97c2}{UpdatedfdX}}(Eigen::VectorXd\ \&\ X,\ Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ W)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abc5e22725ed3add0028d5df2c64723de}{UpdatedfdW}}(Eigen::VectorXd\ \&\ X,\ Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ W)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653}{UpdatedhdX}}(Eigen::VectorXd\ \&\ X,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ V)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f}{UpdatedhdV}}(Eigen::VectorXd\ \&\ X,\ \textcolor{keywordtype}{double}\ t,\ Eigen::VectorXd\ \&\ V)=0;\ \textcolor{comment}{//\ Deve\ ser\ definido\ pelo\ usuario}}
+\DoxyCodeLine{00424\ \ \ \ \ \};}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{comment}{\ \ \ \ /***********************************************************************************************}}
+\DoxyCodeLine{00427\ \textcolor{comment}{\ \ \ \ \ *\ \ Bayesian\ filter\ base\ class:}}
+\DoxyCodeLine{00428\ \textcolor{comment}{\ \ \ \ ***********************************************************************************************/}}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{BayesianFilter}}}
+\DoxyCodeLine{00446\ \ \ \ \ \{}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};\ }
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}};\ }
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};\ }
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};\ }
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}};\ }
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}};\ }
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};\ }
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}};\ }
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}};\ }
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}};\ }
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3}{BayesianFilter}}()}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ 0;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ 0;}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8}{\string~BayesianFilter}}()\{\}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{protected}:\ \textcolor{comment}{//\ Only\ derived\ classes\ have\ access}}
+\DoxyCodeLine{00469\ \ \ \ \ }
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{Reset}}(Eigen::VectorXd\ \&X0,\ Eigen::MatrixXd\ \&P0,\ \textcolor{keywordtype}{int}\ Nx,\ \textcolor{keywordtype}{int}\ Ny)}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.resize(Nx,\ 1);}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}.resize(Nx,\ Nx);}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}.resize(Ny,\ 1);}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.resize(Ny,\ 1);}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.resize(Ny,\ Ny);}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}.resize(Ny,\ 1);}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.resize(Ny,\ 1);}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.resize(Ny,\ Ny);}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ 0;}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ 0;}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ X0;}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ P0;}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ }
+\DoxyCodeLine{00494\ \ \ \ \ \};}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{LinearBayesianFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{BayesianFilter}}}
+\DoxyCodeLine{00500\ \ \ \ \ \{}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a9ac4ad8a042aa374cd3ed5e70705c59f}{\string~LinearBayesianFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nLinearBayesianFilter\ Base\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a4b62173eb897efca57f4d1828c00b4ac}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)=0;}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_a9879fce56c43d5213d32d34fd0faf13f}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)=0;}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab46cbdebe15455725ee636eb8de64f13}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)=0;}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.rows()!=\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\textcolor{stringliteral}{"{}Number\ of\ rows\ of\ A\ should\ be\ the\ same\ number\ of\ rows\ of\ X"{}});}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.cols()!=\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\textcolor{stringliteral}{"{}Number\ of\ cols\ of\ A\ should\ be\ the\ same\ number\ of\ rows\ of\ X"{}});}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}.rows()!=\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\textcolor{stringliteral}{"{}Number\ of\ rows\ of\ B\ should\ be\ the\ same\ number\ of\ rows\ of\ X"{}});}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00516\ \ \ \ \ \};}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter}{KalmanFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{LinearBayesianFilter}}}
+\DoxyCodeLine{00524\ \ \ \ \ \{}
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter_a76c630721cc767284804d46ade31f35f}{\string~KalmanFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nKalmanFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter_a2a50851db1dc4cf99782ce13ae32a6b9}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00533\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}});}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter_a2e68e31c9fb3314b74c98a9e0ac81863}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00543\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Predicao}}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}\ *\ U;}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}};}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1KalmanFilter_a03bfc6cb6ba0b541506fb2dfae454113}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00558\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Correcao}}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ G\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse();}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Gi\ =\ G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ Gi.rows();\ ++i)\{}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}[i])\ Gi(i)\ =\ atan2(sin(Gi(i)),cos(Gi(i)));}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ Gi;}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//P\ =\ (Eigen::MatrixXd::Identity(X.rows(),\ X.rows())\ -\/\ G\ *\ linear\_model.C)\ *\ P;}}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ numericaly\ stable\ P\ update:}}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ (Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}})\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *((Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}).transpose())\ +\ G*linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}*G.transpose();\ }
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};\ }
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00590\ \ \ \ \ \};}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter}{AdaptiveKalmanFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{LinearBayesianFilter}}}
+\DoxyCodeLine{00598\ \ \ \ \ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}{alpha}};\ }
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}{beta}};\ \ }
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aedec8b91199061791f6cf3c33def837a}{\string~AdaptiveKalmanFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nAdaptiveKalmanFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a78c095f1083f91f996e8a83a53bcf179}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model,\ \textcolor{keywordtype}{double}\ \_alpha,\ \textcolor{keywordtype}{double}\ \_beta)}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}{alpha}}\ =\ \_alpha;}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}{beta}}\ =\ \_beta;}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}});}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_af93c0d4309d5f4cd0719ddf14826d7cb}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00623\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a78c095f1083f91f996e8a83a53bcf179}{Reset}}(linear\_model,\ 0.95,\ 0.99);}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_af416d14b868be1a526f1b924754790f4}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00634\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Predicao}}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}\ *\ U;}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}};}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_abff8a1858d8fa6f4a62db083e2ad5630}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00648\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Innovation}}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ P\_predicted\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}};}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ State\ update}}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ G\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse();}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Gi\ =\ G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ Gi.rows();\ ++i)\{}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}[i])\ Gi(i)\ =\ atan2(sin(Gi(i)),cos(Gi(i)));}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ Gi;}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//P\ =\ (Eigen::MatrixXd::Identity(X.rows(),\ X.rows())\ -\/\ G\ *\ linear\_model.C)\ *\ P;}}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ numericaly\ stable\ P\ update:}}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ (Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}})\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *((Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}).transpose())\ +\ G*linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}*G.transpose();\ }
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Innovation\ corrected}}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};\ }
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ R\ and\ Q\ updates}}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}{alpha}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}\ +\ (1.0-\/\mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_a1b2c7d9649959ae19db6ba290c95fd81}{alpha}})*(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ P\_predicted\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose());}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}{beta}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}\ +\ (1.0-\/\mbox{\hyperlink{classBayesianFiltering_1_1AdaptiveKalmanFilter_aac8075a5bbf7cb31a10123ef13815721}{beta}})*(G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ G.transpose());}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00688\ \ \ \ \ \};}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00697\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter}{RobustSelfAdaptiveKalmanFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter}{LinearBayesianFilter}}}
+\DoxyCodeLine{00698\ \ \ \ \ \{}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ P\_corrected;\ }
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter_a7461ea0754245452535360104d797495}{\string~RobustSelfAdaptiveKalmanFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nRobustSelfAdaptiveKalmanFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter_ab70a653f3efea4fafeb16fbab3124503}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00710\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}},\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}});}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ P\_corrected\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}};}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter_aa5ad5356a152a7a50de20c12ea8004c5}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00721\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Predicao}}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}\ *\ U;}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}};}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1RobustSelfAdaptiveKalmanFilter_a7ee09a3b467eae54e69d6f0b78dc0a21}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel}{StateSpaceLinearModel}}\&\ linear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00735\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1LinearBayesianFilter_ab638d21ff637a326ca14c2ba152d6107}{CheckModel}}(linear\_model);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ohmega\ calculation}}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sigma\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}(0,0);}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ epsilon\ =\ abs(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(0,0));}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ohmega\ =\ 0.0;}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sigma\ >\ 0.0)\{}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ohmega\ =\ (epsilon\ <=\ sigma)\ ?\ 1.0\ :\ sigma/epsilon;\ }
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ R\ update}}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}\ =\ ohmega\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}\ +\ (1-\/ohmega)*(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ P\_corrected\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose());}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Innovation}}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ State\ update}}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ G\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse();}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Gi\ =\ G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ Gi.rows();\ ++i)\{}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\_isangle}}[i])\ Gi(i)\ =\ atan2(sin(Gi(i)),cos(Gi(i)));}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ Gi;}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//P\ =\ (Eigen::MatrixXd::Identity(X.rows(),\ X.rows())\ -\/\ G\ *\ linear\_model.C)\ *\ P;}}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ numericaly\ stable\ P\ update:}}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ (Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}})\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *((Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}).transpose())\ +\ G*linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}*G.transpose();\ }
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Innovation\ corrected}}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};\ }
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}.transpose()\ +\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}};}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Q\ update}}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}\ =\ ohmega\ *\ linear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}\ +\ (1-\/ohmega)*(G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ G.transpose());}
+\DoxyCodeLine{00780\ \ \ \ \ }
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ P\ corrected,\ to\ be\ used\ in\ next\ interaction}}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ P\_corrected\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}};}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00787\ \ \ \ \ \};}
+\DoxyCodeLine{00788\ }
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{NonlinearBayesianFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{BayesianFilter}}}
+\DoxyCodeLine{00793\ \ \ \ \ \{}
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a02daa911f2109962a57aec228749787a}{\string~NonlinearBayesianFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nNonlinearBayesianFilter\ Base\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00796\ }
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a28fc1775792b802a1df6463674f482c4}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)=0;}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_afaff5e76c6ab454c9851782953c4e51f}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)=0;}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a8a37d1ee41f652a39d5d133302b8cea7}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)=0;}
+\DoxyCodeLine{00800\ \ \ \ \ \};}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter}{ExtendedKalmanFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{NonlinearBayesianFilter}}}
+\DoxyCodeLine{00808\ \ \ \ \ \{}
+\DoxyCodeLine{00809\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter_a0d10e5870847b4f8c89e3b7cde08a45a}{\string~ExtendedKalmanFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nExtendedKalmanFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00811\ }
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter_a5daec8d7a02fbf24bba77a2b1cc390f9}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00817\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}});}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00820\ }
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter_a8defbe5d5f2c05f7e4170e671737527b}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00828\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ model\ (linearized\ on\ previous\ correction\ state)}}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ W\ =\ Eigen::MatrixXd::Zero(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}}.rows(),\ 1);}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a154eb44be88baac00b007f5ea15a97c2}{UpdatedfdX}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},U,t,W);}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abc5e22725ed3add0028d5df2c64723de}{UpdatedfdW}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},U,t,W);}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Predicao}}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}{ProcessModel}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},U,t,W);}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}{dfdX}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ae06397a8fbc311c2d9688655c449a3e5}{dfdX}}.transpose()\ +\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}}*nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}}*nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_abd354ee60196be6bd33ed127149494db}{dfdW}}.transpose();}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1ExtendedKalmanFilter_a169421e467a434cafe166a2f881ed01a}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00849\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res;}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ model\ (linearized\ on\ predicted\ state)}}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ V\ =\ Eigen::VectorXd::Zero(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}.rows(),\ 1);}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653}{UpdatedhdX}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f}{UpdatedhdV}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ State\ correction:}}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}},\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}.transpose()\ +\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}.transpose();}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ G\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse();\ }
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Gi\ =\ G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ Gi.rows();\ ++i)\{}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}[i])\ Gi(i)\ =\ atan2(sin(Gi(i)),cos(Gi(i)));}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ Gi;}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ P\ =\ (Eigen::MatrixXd::Identity(X.rows(),\ X.rows())\ -\/\ G\ *\ nonlinear\_model.dhdX)\ *\ P;\ }}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ numericaly\ stable\ P\ update:}}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ (Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}})\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *((Eigen::MatrixXd::Identity(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows(),\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}.rows())\ -\/\ G\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}).transpose())\ +\ G*nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}*G.transpose();\ }
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ model\ (linearized\ on\ corrected\ state)}}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ V\ =\ Eigen::VectorXd::Zero(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}.rows(),\ 1);}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a45d07b41bb55b0aaf3fa59e430418653}{UpdatedhdX}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a14b0c21e7d94cfc9d7307b9742a24e8f}{UpdatedhdV}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ corrected\ output,\ innovation\ and\ d\string^2:}}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}},\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},t,V);}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa0373936a18033f5a20a1b01c7d26376}{dhdX}}.transpose()\ +\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}\ *\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a82b6823834c500b7bcd7aa7c993f1bdc}{dhdV}}.transpose();}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{00893\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00895\ }
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00897\ \ \ \ \ \};}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00904\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter}{UnscentedKalmanFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{NonlinearBayesianFilter}}}
+\DoxyCodeLine{00905\ \ \ \ \ \{}
+\DoxyCodeLine{00906\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeWeights(Eigen::VectorXd\ \&\ Wsigma,\ \textcolor{keywordtype}{double}\ \&\ kappa,\ \textcolor{keywordtype}{int}\ Nx)}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nsigma\ =\ 2*Nx\ +\ 1;}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \ \ \ \ Wsigma.resize(Nsigma,1);}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ \ \ kappa\ =\ (3\ >\ Nx-\/3)\ ?\ 3\ :\ Nx-\/3;}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \ \ Wsigma(0)\ =\ kappa/(Nx+kappa);}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ Wsigma.rows();\ ++i)\ \{}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Wsigma(i)\ =\ 1/(2.0*(Nx+kappa));}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ \ \ \ \ Wsigma\ =\ Wsigma\ /\ Wsigma.sum();\ \textcolor{comment}{//\ Garante\ soma\ 1.}}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Override\ virtual\ members:}}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_a2c3dd2073fa5f8b90a6db96974fc55c5}{\string~UnscentedKalmanFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nUnscentedKalmanFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_a25500b3c28a2fb477639c7d2f6df9928}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00936\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}});}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_af73db4e28719965cf651bc583dc8142c}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00947\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Prediction}}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ function\ x(k)\ =\ f(x(k-\/1),u(k),w(k),t(k))\ is\ converted\ to\ x(k)\ =\ f(xa(k),u(k),t(k))\ with\ xa(k)\ =\ [x(k-\/1);\ w(k)]}}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nx\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}};}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nw\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}};}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ DimX\ =\ Nx\ +\ Nw;}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ DimY\ =\ Nx;}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Wsigma;}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ kappa;}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ InitializeWeights(Wsigma,\ kappa,\ DimX);}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nsigma\ =\ Wsigma.rows();}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ augmented\ Xa\ and\ Pa}}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xa(DimX);\ }
+\DoxyCodeLine{00964\ \ \ \ \ \ \ \ \ \ \ \ \ Xa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},\ Eigen::VectorXd::Zero(Nw);}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Pa(DimX,DimX);\ }
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \ \ Pa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}},\ Eigen::MatrixXd::Zero(Nx,Nw),}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd::Zero(Nw,\ Nx),\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}};}
+\DoxyCodeLine{00969\ }
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ sigma\ points:}}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Xsigma(DimX,Nsigma);}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Ysigma(DimY,Nsigma);}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::LLT<Eigen::MatrixXd>\ llt((DimX+kappa)*Pa);}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ L\ =\ llt.matrixL();\ \ }
+\DoxyCodeLine{00976\ }
+\DoxyCodeLine{00977\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xi(Nx);}
+\DoxyCodeLine{00978\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Wi(Nw);}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i==0)\{}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa;}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\ <=\ DimX)\{}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ +\ L.col(i-\/1);}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ -\/\ L.col(i-\/1-\/DimX);}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ Xsigma.block(0\ ,\ i,\ Nx,\ 1);}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Wi\ =\ Xsigma.block(Nx,\ i,\ Nw,\ 1);}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}{ProcessModel}}(Xi,U,t,Wi);}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Ysigma.col(i)\ =\ Xi;}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ prediction}}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ Eigen::VectorXd::Zero(Nx);}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +=\ Wsigma(i)*Ysigma.col(i);}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ Eigen::MatrixXd::Zero(Nx,Nx);}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ +=\ Wsigma(i)*(Ysigma.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}})*((Ysigma.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}).transpose());}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01005\ }
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_aae328146f63b86867329d0179e2b7c00}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{01016\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01018\ }
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Correction}}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ function\ y(k)\ =\ h(x(k),v(k))\ is\ converted\ to\ x(k)\ =\ h(xa(k))\ with\ xa(k)\ =\ [x(k);\ v(k)]}}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nx\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}};}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Ny\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}};}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nv\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}};}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ DimX\ =\ Nx\ +\ Nv;}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ DimY\ =\ Ny;}
+\DoxyCodeLine{01026\ }
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Wsigma;}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ kappa;}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \ \ \ \ InitializeWeights(Wsigma,\ kappa,\ DimX);}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nsigma\ =\ Wsigma.rows();}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ augmented\ Xa\ and\ Pa}}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xa(DimX);\ }
+\DoxyCodeLine{01034\ \ \ \ \ \ \ \ \ \ \ \ \ Xa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},\ Eigen::VectorXd::Zero(Nv);}
+\DoxyCodeLine{01035\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01036\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Pa(DimX,DimX);\ }
+\DoxyCodeLine{01037\ \ \ \ \ \ \ \ \ \ \ \ \ Pa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}},\ Eigen::MatrixXd::Zero(Nx,Nv),}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd::Zero(Nv,Nx),\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}};}
+\DoxyCodeLine{01039\ }
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ sigma\ points:}}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Xsigma(DimX,Nsigma);\ Xsigma\ =\ Eigen::MatrixXd::Zero(DimX,Nsigma);}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Ysigma(DimY,Nsigma);\ Ysigma\ =\ Eigen::MatrixXd::Zero(DimY,Nsigma);}
+\DoxyCodeLine{01043\ }
+\DoxyCodeLine{01044\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ L;}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::LLT<Eigen::MatrixXd>\ llt((DimX+kappa)*Pa);}
+\DoxyCodeLine{01047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ L\ =\ llt.matrixL();\ \ }
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01049\ }
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xi(Nx);}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Vi(Nv);}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Yi(Ny);}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i==0)\{}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa;}
+\DoxyCodeLine{01056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\ <=\ DimX)\{}
+\DoxyCodeLine{01058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ +\ L.col(i-\/1);}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ -\/\ L.col(i-\/1-\/DimX);}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ Xsigma.block(0\ ,\ i,\ Nx,\ 1);}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Vi\ =\ Xsigma.block(Nx,\ i,\ Nv,\ 1);}
+\DoxyCodeLine{01065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(Yi,Xi,t,Vi);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Ysigma.col(i)\ =\ Yi;}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ correction}}
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ =\ Eigen::VectorXd::Zero(Ny);}
+\DoxyCodeLine{01070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ +=\ Wsigma(i)*Ysigma.col(i);}
+\DoxyCodeLine{01072\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01073\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Pyy\ =\ Eigen::MatrixXd::Zero(Nx,Nx);}
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Pxy\ =\ Eigen::MatrixXd::Zero(Nx,Ny);}
+\DoxyCodeLine{01075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ dX\ =\ Xsigma.block(0\ ,\ i,\ Nx,\ 1)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;\ j\ <\ dX.rows();\ ++j)\{}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}[j])\ dX(j)\ =\ atan2(sin(dX(j)),cos(dX(j)));}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ dY\ =\ Ysigma.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;\ j\ <\ dY.rows();\ ++j)\{}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[j])\ dY(j)\ =\ atan2(sin(dY(j)),cos(dY(j)));}
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pyy\ +=\ Wsigma(i)*(dY)*(dY.transpose());}
+\DoxyCodeLine{01085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pxy\ +=\ Wsigma(i)*(dX)*(dY.transpose());}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01091\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ Pyy;}
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{01093\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ G\ =\ Pxy\ *\ Pyy.inverse();\ }
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ Gi\ =\ G\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}};}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ Gi.rows();\ ++i)\{}
+\DoxyCodeLine{01097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}[i])\ Gi(i)\ =\ atan2(sin(Gi(i)),cos(Gi(i)));}
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +\ Gi;}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ -\/\ G*Pyy*G.transpose();\ }
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ corrected\ output,\ innovation\ and\ d\string^2:}}
+\DoxyCodeLine{01103\ \ \ \ \ \ \ \ \ \ \ \ \ Xa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}},\ Eigen::VectorXd::Zero(Nv);}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \ \ \ \ Pa\ <<\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}},\ Eigen::MatrixXd::Zero(Nx,Nv),}
+\DoxyCodeLine{01105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::MatrixXd::Zero(Nv,Nx),\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}};}
+\DoxyCodeLine{01106\ }
+\DoxyCodeLine{01107\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::LLT<Eigen::MatrixXd>\ llt((DimX+kappa)*Pa);}
+\DoxyCodeLine{01109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ L\ =\ llt.matrixL();\ \ }
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i==0)\{}
+\DoxyCodeLine{01113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa;}
+\DoxyCodeLine{01114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\ <=\ DimX)\{}
+\DoxyCodeLine{01116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ +\ L.col(i-\/1);}
+\DoxyCodeLine{01117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{01119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xsigma.col(i)\ =\ Xa\ -\/\ L.col(i-\/1-\/DimX);}
+\DoxyCodeLine{01120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ Xsigma.block(0\ ,\ i,\ Nx,\ 1);}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Vi\ =\ Xsigma.block(Nx,\ i,\ Nv,\ 1);}
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(Yi,Xi,t,Vi);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Ysigma.col(i)\ =\ Yi;}
+\DoxyCodeLine{01125\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01126\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ =\ Eigen::VectorXd::Zero(Ny);}
+\DoxyCodeLine{01127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ +=\ Wsigma(i)*Ysigma.col(i);}
+\DoxyCodeLine{01129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01130\ \ \ \ \ \ \ \ \ \ \ \ \ Pyy\ =\ Eigen::MatrixXd::Zero(Nx,Nx);}
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ Nsigma;\ ++i)\ \{}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Pyy\ +=\ Wsigma(i)*(Ysigma.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}})*((Ysigma.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}).transpose());}
+\DoxyCodeLine{01133\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01134\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{01135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{01137\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01138\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ Pyy;}
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{01140\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01142\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01143\ }
+\DoxyCodeLine{01144\ \ \ \ \ \};}
+\DoxyCodeLine{01145\ \ \ \ \ }
+\DoxyCodeLine{01152\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter}{SamplingImportanceResamplingFilter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{NonlinearBayesianFilter}}}
+\DoxyCodeLine{01153\ \ \ \ \ \{}
+\DoxyCodeLine{01154\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ ResetWeights()}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.rows();}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.setConstant(1.0/((\textcolor{keywordtype}{double})(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}})));}
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01163\ }
+\DoxyCodeLine{01164\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6b}{EstimateType}}}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6baef0fad7967aa732b5e9e457c2a9ed43c}{MaximumAPosteriori}},\ }
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6ba0a3a52130fe22dcb79ca55d0b57582ec}{ConditionalMean}},\ }
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01173\ }
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a36e4b5ca5d01afcf97d7495d90d53d1e}{EnumToString}}(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6b}{EstimateType}}\ x)}
+\DoxyCodeLine{01178\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<EstimateType,const\ char*>\ Strings\ \{}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6baef0fad7967aa732b5e9e457c2a9ed43c}{EstimateType::MaximumAPosteriori}},\ \textcolor{stringliteral}{"{}Maximum\ a\ Posteriori\ estimate"{}}\ \},}
+\DoxyCodeLine{01181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6ba0a3a52130fe22dcb79ca55d0b57582ec}{EstimateType::ConditionalMean}},\ \textcolor{stringliteral}{"{}Conditional\ Mean\ estimate"{}}\ \},}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \ \ it\ \ =\ Strings.find(x);}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it\ ==\ Strings.end()\ ?\ \textcolor{stringliteral}{"{}Out\ of\ range"{}}\ :\ it-\/>second;}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01186\ }
+\DoxyCodeLine{01187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Specific\ data}}
+\DoxyCodeLine{01188\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6b}{EstimateType}}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a4781a630d5653df4a5e0ac70b20c58ea}{estimate\_type}};\ }
+\DoxyCodeLine{01189\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ \ \ \ \ \ }
+\DoxyCodeLine{01190\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}};\ }
+\DoxyCodeLine{01191\ \ \ \ \ \ \ \ \ Eigen::MatrixXd\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}};\ }
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ Eigen::VectorXd\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}};\ }
+\DoxyCodeLine{01193\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a89f8282a7616609bae8561867e873848}{ESS}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01194\ }
+\DoxyCodeLine{01195\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Override\ virtual\ members:}}
+\DoxyCodeLine{01196\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_af7df74af0cc8c52b7dbd30aee98cf45d}{\string~SamplingImportanceResamplingFilter}}()\ \{std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nSamplingImportanceResamplingFilter\ derived\ class\ destroyed\(\backslash\)n"{}};\}}
+\DoxyCodeLine{01197\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad3ba65a88c49ef0d7e2c9136b18981ba}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \_Nparticles,\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6b}{EstimateType}}\ \_estimate\_type)}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01206\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{BayesianFilter::Reset}}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a37aeb20d52fb748e661a759890414d96}{X0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7e4a56ce965aa1e1c8526caebc31db9a}{P0}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}});}
+\DoxyCodeLine{01207\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}\ =\ \_Nparticles;}
+\DoxyCodeLine{01208\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a4781a630d5653df4a5e0ac70b20c58ea}{estimate\_type}}\ =\ \_estimate\_type;}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.resize(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}},\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}});}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}}.resize(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}},\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}});}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.resize(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}});}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \ \ \ \ \ \ ResetWeights();}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a89f8282a7616609bae8561867e873848}{ESS}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};}
+\DoxyCodeLine{01214\ }
+\DoxyCodeLine{01215\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01216\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xi(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}});}
+\DoxyCodeLine{01217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{01219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(Xi,\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}});}
+\DoxyCodeLine{01220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(res.first)\{}
+\DoxyCodeLine{01221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)\ =\ Xi\ +\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01224\ }
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01226\ }
+\DoxyCodeLine{01231\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a58a06663e327476351462db25e6f5621}{Reset}}(\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{01232\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{01233\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad3ba65a88c49ef0d7e2c9136b18981ba}{Reset}}(nonlinear\_model,\ 1000,\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6ba0a3a52130fe22dcb79ca55d0b57582ec}{EstimateType::ConditionalMean}});\ \textcolor{comment}{//\ default\ number\ of\ particles}}
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01235\ }
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ab18cecce4bb3dba6406ac61d4761f14a}{NormalizeWeights}}()}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.sum()\ >\ 0)\{}
+\DoxyCodeLine{01242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ c\ =\ 1.0/\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.sum();}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}\ *=\ c;}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}SIR\ filter\ diverged:\ sum\ of\ weights\ =\ \%f"{}},\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.sum());}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01250\ }
+\DoxyCodeLine{01254\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_af5375dd7b46004817fe548c9166b8ce0}{ComputeESS}}()\ }
+\DoxyCodeLine{01255\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ 0;}
+\DoxyCodeLine{01257\ }
+\DoxyCodeLine{01258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.rows();\ ++i)\ \{}
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)*\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i);}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sum\ <=\ 0.0)\{}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{ResultFormat}}(\textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}SIR\ filter\ diverged:\ sum\ of\ square\ weights\ =\ \%f"{}},\ sum);}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a89f8282a7616609bae8561867e873848}{ESS}}\ =\ 1/sum;}
+\DoxyCodeLine{01265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01266\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01267\ }
+\DoxyCodeLine{01274\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ae56bfdf1e98c312ccc7a6ab8781afed6}{Prediction}}(Eigen::VectorXd\ \&\ U,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{01275\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{01276\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01277\ }
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Prediction}}
+\DoxyCodeLine{01279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generic\ nonlinear\ model\ x(k)\ =\ f(x(k-\/1),u(k),w(k),t(k))}}
+\DoxyCodeLine{01280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nx\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}};}
+\DoxyCodeLine{01281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nw\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a44a6c5e61e926fcd86f8b08bfcafef1e}{Nw}};}
+\DoxyCodeLine{01282\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.cols();}
+\DoxyCodeLine{01283\ }
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \ \ \ \ \ \ ResetWeights();}
+\DoxyCodeLine{01285\ }
+\DoxyCodeLine{01286\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xi(Nx);}
+\DoxyCodeLine{01287\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Wi(Nw);}
+\DoxyCodeLine{01288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(Wi,\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ad78b3f98768f46bccb998dbef5bcddde}{Q}});}
+\DoxyCodeLine{01291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab3b4586b2c2bd364e342befaded364ab}{ProcessModel}}(Xi,U,t,Wi);}
+\DoxyCodeLine{01293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)\ =\ Xi;}
+\DoxyCodeLine{01295\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01296\ }
+\DoxyCodeLine{01297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ prediction:\ assuming\ equal\ weights,\ Conditional\ Mean\ and\ Maximum\ a\ Posteriori\ are\ the\ same.}}
+\DoxyCodeLine{01298\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ Eigen::VectorXd::Zero(Nx);}
+\DoxyCodeLine{01299\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)*\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01301\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01302\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ Eigen::MatrixXd::Zero(Nx,Nx);}
+\DoxyCodeLine{01303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)*(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}})*((\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}).transpose());}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01306\ }
+\DoxyCodeLine{01307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Particle\ Weights}}
+\DoxyCodeLine{01308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ need\ to\ updade;}}
+\DoxyCodeLine{01309\ }
+\DoxyCodeLine{01310\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_af5375dd7b46004817fe548c9166b8ce0}{ComputeESS}}();\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01311\ }
+\DoxyCodeLine{01312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01313\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01314\ }
+\DoxyCodeLine{01321\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad0d1cc872267cbbca0a1d1b9b77b1da3}{Correction}}(Eigen::VectorXd\ \&\ Y,\ \textcolor{keywordtype}{double}\ t,\ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{StateSpaceNonlinearModelBase}}\&\ nonlinear\_model)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{01322\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{01323\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}}\ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a24cfe626b8474dd20d43a2042479ae04}{BayesianFiltering::ResultFormat}}(\textcolor{keyword}{true},\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{01324\ }
+\DoxyCodeLine{01325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Correction}}
+\DoxyCodeLine{01326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generic\ nonlinear\ model\ y(k)\ =\ h(x(k),v(k))}}
+\DoxyCodeLine{01327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nx\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ac46bff51090fdc967432d80cb53b82e2}{Nx}};}
+\DoxyCodeLine{01328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Ny\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aa9d7b1dd21bd4d0e45b8999ddfc20c66}{Ny}};}
+\DoxyCodeLine{01329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Nv\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a85a8b79224ecaa4783aa50a09b5e939a}{Nv}};}
+\DoxyCodeLine{01330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}.rows();}
+\DoxyCodeLine{01331\ }
+\DoxyCodeLine{01332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ weights}}
+\DoxyCodeLine{01333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \%\%\%\ Observar\ que\ os\ pesos\ q\ das\ particulas\ não\ são\ passadas\ como\ argumento.\ De\ fato,\ assume-\/se\ que\ estes\ pesos}}
+\DoxyCodeLine{01334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \%\%\%\ são\ todos\ iguais\ a\ 1/Ns,\ decorrente\ da\ ultima\ execução\ do\ estimador.\ Assim,\ o\ calculo\ da\ ponderação\ }}
+\DoxyCodeLine{01335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \%\%\%\ q(k)\ =\ q(k-\/1)*p(z(k)|x(k))\ seguido\ da\ normalização\ q(k)\ =\ q(k)/sum(q)\ dá\ na\ mesma\ coisa\ do\ que\ fazer\ }}
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \%\%\%\ q(k)\ =\ p(z(k)|x(k))\ seguido\ de\ q(k)\ =\ q(k)/sum(q),\ como\ está\ implementado.\ }}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Xi(Nx);}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Vi(Nv);}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ Yi(Ny);}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ =\ Eigen::VectorXd::Zero(Ny);\ \textcolor{comment}{//\ Computer\ with\ weights\ equal,\ leading\ to\ the\ mean}}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(Vi,\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}});\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(Yi,Xi,t,Vi);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ +=\ Yi;\ \textcolor{comment}{//\ Simple\ mean}}
+\DoxyCodeLine{01346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)\ =\ exp(((-\/0.5)*(Y-\/Yi).transpose()*(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}}.inverse())*(Y-\/Yi)));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}}.col(i)\ =\ Yi;}
+\DoxyCodeLine{01348\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}}\ /=\ ((double)(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ab18cecce4bb3dba6406ac61d4761f14a}{NormalizeWeights}}();\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01351\ }
+\DoxyCodeLine{01352\ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_af5375dd7b46004817fe548c9166b8ce0}{ComputeESS}}();\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01353\ }
+\DoxyCodeLine{01354\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ =\ Eigen::MatrixXd::Zero(Ny,Ny);}
+\DoxyCodeLine{01355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}}.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{01357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;\ j\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++j)\{}
+\DoxyCodeLine{01358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[j])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(j)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(j)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(j)));}
+\DoxyCodeLine{01359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}*(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose());}
+\DoxyCodeLine{01361\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01362\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}\ /=\ ((double)(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01363\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\_predicted}};}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.size();\ ++i)\{}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}(i)));}
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01367\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\_predicted}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\_predicted}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\_predicted}})(0,\ 0);}
+\DoxyCodeLine{01368\ }
+\DoxyCodeLine{01369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Resampling}}
+\DoxyCodeLine{01370\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ WparticlesCumSum(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}});}
+\DoxyCodeLine{01371\ \ \ \ \ \ \ \ \ \ \ \ \ WparticlesCumSum(0)\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(0);}
+\DoxyCodeLine{01372\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WparticlesCumSum(i)\ =\ WparticlesCumSum(i-\/1)\ +\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i);}
+\DoxyCodeLine{01374\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01375\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{01377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u1\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8cd47b1c16927b0525100a4cbae60a5d}{UnivariateUniformSampler}}(0.0,\ 1.0)/((double)(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++j)\ \{}
+\DoxyCodeLine{01379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u\ =\ u1\ +\ ((double)(j))/((\textcolor{keywordtype}{double})(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u\ >\ 1.0)\{\ u\ =\ 1.0;\ \}}
+\DoxyCodeLine{01381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (u\ >\ WparticlesCumSum(i))\{}
+\DoxyCodeLine{01382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ i\ +\ 1;}
+\DoxyCodeLine{01383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}-\/1)\{}
+\DoxyCodeLine{01384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}-\/1;}
+\DoxyCodeLine{01385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(j)\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01390\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01391\ \ \ \ \ \ \ \ \ \ \ \ \ ResetWeights();}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ correction}}
+\DoxyCodeLine{01394\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ Eigen::VectorXd::Zero(Nx);}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a4781a630d5653df4a5e0ac70b20c58ea}{estimate\_type}})\{}
+\DoxyCodeLine{01396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6ba0a3a52130fe22dcb79ca55d0b57582ec}{EstimateType::ConditionalMean}}:}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)*\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_ad590b10a7c591891184bce2e885e6e6baef0fad7967aa732b5e9e457c2a9ed43c}{EstimateType::MaximumAPosteriori}}:}
+\DoxyCodeLine{01404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ }
+\DoxyCodeLine{01405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ imax\ =\ 0;}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)\ >\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(imax))\ imax\ =\ i;}
+\DoxyCodeLine{01408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(imax);}
+\DoxyCodeLine{01410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01412\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01413\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01414\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ =\ Eigen::MatrixXd::Zero(Nx,Nx);}
+\DoxyCodeLine{01415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::VectorXd\ dX\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}};}
+\DoxyCodeLine{01417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;\ j\ <\ dX.rows();\ ++j)\{}
+\DoxyCodeLine{01418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_aad07d466df1ddba304ae1ec83781834a}{X\_isangle}}[j])\ dX(j)\ =\ atan2(sin(dX(j)),cos(dX(j)));}
+\DoxyCodeLine{01419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}\ +=\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_abafd974a01347ed9a94633ce14e50687}{Wparticles}}(i)*(dX)*(dX.transpose());}
+\DoxyCodeLine{01421\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01422\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01423\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ corrected\ output,\ innovation\ and\ d\string^2:}}
+\DoxyCodeLine{01424\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ =\ Eigen::VectorXd::Zero(Ny);\ \textcolor{comment}{//\ Computer\ with\ weights\ equal,\ leading\ to\ the\ mean}}
+\DoxyCodeLine{01425\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a7a0b7426ee11cf40b34cc2833fba9c27}{Xparticles}}.col(i);}
+\DoxyCodeLine{01427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ \mbox{\hyperlink{namespaceBayesianFiltering_a8e53756356570408ba342394af586178}{MultivariateZeroMeanGaussianSampler}}(Vi,\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a5a89c071c86564699f4748689bb03a89}{R}});\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_a7af08d7b4867ee71df1fa16888df78a3}{MeasurementModel}}(Yi,Xi,t,Vi);\ \textcolor{keywordflow}{if}(!res.first)\ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ +=\ Yi;\ \textcolor{comment}{//\ Simple\ mean}}
+\DoxyCodeLine{01430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}}.col(i)\ =\ Yi;}
+\DoxyCodeLine{01431\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01432\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}}\ /=\ ((double)(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01433\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ =\ Eigen::MatrixXd::Zero(Ny,Ny);}
+\DoxyCodeLine{01434\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}};\ ++i)\ \{}
+\DoxyCodeLine{01435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ \mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a43a948a39434abad7e1f9fde1a0222d9}{Yparticles}}.col(i)-\/\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{01436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;\ j\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++j)\{}
+\DoxyCodeLine{01437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[j])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(j)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(j)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(j)));}
+\DoxyCodeLine{01438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ +=\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})*(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose());}
+\DoxyCodeLine{01440\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01441\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}\ /=\ ((double)(\mbox{\hyperlink{classBayesianFiltering_1_1SamplingImportanceResamplingFilter_a9facf97c269d3d6c40355ab537792ff8}{Nparticles}}));}
+\DoxyCodeLine{01442\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}\ =\ Y\ -\/\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\_corrected}};}
+\DoxyCodeLine{01443\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;\ i\ <\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.size();\ ++i)\{}
+\DoxyCodeLine{01444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(nonlinear\_model.\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase_ab8606787d708e0c0c2973288827e9735}{Y\_isangle}}[i])\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)\ =\ atan2(sin(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)),cos(\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}(i)));}
+\DoxyCodeLine{01445\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01446\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\_corrected}}\ =\ (\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}}.transpose()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\_corrected}}.inverse()\ *\ \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\_corrected}})(0,\ 0);}
+\DoxyCodeLine{01447\ }
+\DoxyCodeLine{01448\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01449\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01450\ }
+\DoxyCodeLine{01451\ \ \ \ \ \};}
+\DoxyCodeLine{01452\ \}}
+\DoxyCodeLine{01453\ }
+\DoxyCodeLine{01454\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ BayesianFiltering\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,169 @@
+\doxysection{Bayesian\+Filtering\+::Unscented\+Kalman\+Filter Class Reference}
+\hypertarget{classBayesianFiltering_1_1UnscentedKalmanFilter}{}\label{classBayesianFiltering_1_1UnscentedKalmanFilter}\index{BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}}
+
+
+Unscented Kalman filter, the Unscented Transform (UT)-\/based estimator for stochastic nonlinear state space models.  
+
+
+
+
+{\ttfamily \#include $<$bayesianfiltering.\+hpp$>$}
+
+
+
+Inheritance diagram for Bayesian\+Filtering\+::Unscented\+Kalman\+Filter\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classBayesianFiltering_1_1UnscentedKalmanFilter__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Bayesian\+Filtering\+::Unscented\+Kalman\+Filter\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classBayesianFiltering_1_1UnscentedKalmanFilter__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_a2c3dd2073fa5f8b90a6db96974fc55c5}{\texorpdfstring{$\sim$}{\string~}\+Unscented\+Kalman\+Filter}} ()
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_a25500b3c28a2fb477639c7d2f6df9928}{Reset}} (\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&nonlinear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Reset filter, first procedure before prediction/correction. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_af73db4e28719965cf651bc583dc8142c}{Prediction}} (Eigen\+::\+Vector\+Xd \&U, double t, \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&nonlinear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Prediction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on input vector {\ttfamily U} and model {\ttfamily nonlinear\+\_\+model}. This procedure calls methods of the derived class object {\ttfamily nonlinear\+\_\+model} in order to update model parameters. So there is no need the user to do that. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1UnscentedKalmanFilter_aae328146f63b86867329d0179e2b7c00}{Correction}} (Eigen\+::\+Vector\+Xd \&Y, double t, \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&nonlinear\+\_\+model) override
+\begin{DoxyCompactList}\small\item\em Correction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on measurement vector {\ttfamily Y} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter}{Bayesian\+Filtering\+::\+Nonlinear\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a02daa911f2109962a57aec228749787a}{\texorpdfstring{$\sim$}{\string~}\+Nonlinear\+Bayesian\+Filter}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6305be1b72e53b441c024b39405938b3}{Bayesian\+Filter}} ()
+\item 
+virtual \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a57fb6d7eb118d521e867a0c2f84360e8}{\texorpdfstring{$\sim$}{\string~}\+Bayesian\+Filter}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7bb16b82376416da7e50821ab3985a85}{X}}
+\begin{DoxyCompactList}\small\item\em State vector predictor {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k-\/1) or estimate {\ttfamily x}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab0e7738da4f34838e7ae4a414dd525b1}{P}}
+\begin{DoxyCompactList}\small\item\em State vector error covariance matrix predictor {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k-\/1) or {\ttfamily P}(k\texorpdfstring{$\vert$}{|}k), depending on which stage the filter is. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a7a77a6ffce9de9ec7a54529a63743ccb}{Y\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_ab2531b45055a7a2ca9ef3212be91767e}{V\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k-\/1). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_aa098ee6dfeb40ce34b15e3d7d084ca46}{S\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a36175e97c4d923116694207ea4660d94}{d2\+\_\+predicted}}
+\begin{DoxyCompactList}\small\item\em Predicted innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a748cabfd03cc447eff9c95bf3ca753af}{Y\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected measurement {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a2310b49d2a8f21e7eb456abee0574519}{V\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation {\ttfamily y(k)} -\/ {\ttfamily y}(k\texorpdfstring{$\vert$}{|}k). \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a6105def6f5675b6fbf30843ece1c6ee6}{S\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation covariance matrix. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_a4fcb91a4bb642332836cfb0d0b7821ce}{d2\+\_\+corrected}}
+\begin{DoxyCompactList}\small\item\em Corrected innovation Mahalanobis distance, allowing to verify a filter os oprtimistic ou pessimistic, and divergence. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter}{Bayesian\+Filtering\+::\+Bayesian\+Filter}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1BayesianFilter_abcb94f71c359cc7d769ae0b30549a0de}{Reset}} (Eigen\+::\+Vector\+Xd \&X0, Eigen\+::\+Matrix\+Xd \&P0, int Nx, int Ny)
+\begin{DoxyCompactList}\small\item\em Reset filter, first procedure before prediction/correction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Unscented Kalman filter, the Unscented Transform (UT)-\/based estimator for stochastic nonlinear state space models. 
+
+This implementation is specific for discrete time, continuous state models. ~\newline
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classBayesianFiltering_1_1UnscentedKalmanFilter_a2c3dd2073fa5f8b90a6db96974fc55c5}\label{classBayesianFiltering_1_1UnscentedKalmanFilter_a2c3dd2073fa5f8b90a6db96974fc55c5} 
+\index{BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}!````~UnscentedKalmanFilter@{\texorpdfstring{$\sim$}{\string~}UnscentedKalmanFilter}}
+\index{````~UnscentedKalmanFilter@{\texorpdfstring{$\sim$}{\string~}UnscentedKalmanFilter}!BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}UnscentedKalmanFilter()}{\string~UnscentedKalmanFilter()}}
+{\footnotesize\ttfamily virtual Bayesian\+Filtering\+::\+Unscented\+Kalman\+Filter\+::\texorpdfstring{$\sim$}{\string~}\+Unscented\+Kalman\+Filter (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBayesianFiltering_1_1UnscentedKalmanFilter_aae328146f63b86867329d0179e2b7c00}\label{classBayesianFiltering_1_1UnscentedKalmanFilter_aae328146f63b86867329d0179e2b7c00} 
+\index{BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}!Correction@{Correction}}
+\index{Correction@{Correction}!BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Correction()}{Correction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Unscented\+Kalman\+Filter\+::\+Correction (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{Y,  }\item[{double}]{t,  }\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&}]{nonlinear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Correction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on measurement vector {\ttfamily Y} and model {\ttfamily linear\+\_\+model}. In case of time varying systems, {\ttfamily linear\+\_\+model} class members should be updated before calling this procedure. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Y} & measurement vector of the linear system process model \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time variable, for time varying systems \\
+\hline
+\mbox{\texttt{ in}}  & {\em nonlinear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} derived object for which the filter will run. Model updating and parameter calculations implemented by the user in the {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} derived object are called from inside this method. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_afaff5e76c6ab454c9851782953c4e51f}{Bayesian\+Filtering\+::\+Nonlinear\+Bayesian\+Filter}}.
+
+\Hypertarget{classBayesianFiltering_1_1UnscentedKalmanFilter_af73db4e28719965cf651bc583dc8142c}\label{classBayesianFiltering_1_1UnscentedKalmanFilter_af73db4e28719965cf651bc583dc8142c} 
+\index{BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}!Prediction@{Prediction}}
+\index{Prediction@{Prediction}!BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Prediction()}{Prediction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+Unscented\+Kalman\+Filter\+::\+Prediction (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{double}]{t,  }\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&}]{nonlinear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Prediction procedure, which will update (in place) the internal member variables {\ttfamily X} and {\ttfamily P} based on input vector {\ttfamily U} and model {\ttfamily nonlinear\+\_\+model}. This procedure calls methods of the derived class object {\ttfamily nonlinear\+\_\+model} in order to update model parameters. So there is no need the user to do that. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em U} & input vector of the linear system process model \\
+\hline
+\mbox{\texttt{ in}}  & {\em t} & time variable, for time varying systems \\
+\hline
+\mbox{\texttt{ in}}  & {\em nonlinear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} derived object for which the filter will run. Model updating and parameter calculations implemented by the user in the {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} derived object are called from inside this method. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a28fc1775792b802a1df6463674f482c4}{Bayesian\+Filtering\+::\+Nonlinear\+Bayesian\+Filter}}.
+
+\Hypertarget{classBayesianFiltering_1_1UnscentedKalmanFilter_a25500b3c28a2fb477639c7d2f6df9928}\label{classBayesianFiltering_1_1UnscentedKalmanFilter_a25500b3c28a2fb477639c7d2f6df9928} 
+\index{BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}!Reset@{Reset}}
+\index{Reset@{Reset}!BayesianFiltering::UnscentedKalmanFilter@{BayesianFiltering::UnscentedKalmanFilter}}
+\doxysubsubsection{\texorpdfstring{Reset()}{Reset()}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+Unscented\+Kalman\+Filter\+::\+Reset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} \&}]{nonlinear\+\_\+model }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reset filter, first procedure before prediction/correction. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em nonlinear\+\_\+model} & {\ttfamily \doxylink{classBayesianFiltering_1_1StateSpaceNonlinearModelBase}{State\+Space\+Nonlinear\+Model\+Base}} derived object for which the filter will run \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classBayesianFiltering_1_1NonlinearBayesianFilter_a8a37d1ee41f652a39d5d133302b8cea7}{Bayesian\+Filtering\+::\+Nonlinear\+Bayesian\+Filter}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{bayesianfiltering_8hpp}{bayesianfiltering.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,284 @@
+\doxysection{Bayesian\+Filtering\+::State\+Space\+Linear\+Model Class Reference}
+\hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel}{}\label{classBayesianFiltering_1_1StateSpaceLinearModel}\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+
+
+Represents the parameters of a discrete time, generic linear state space model\+: ~\newline
+  
+
+
+
+
+{\ttfamily \#include $<$bayesianfiltering.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afa39d7f8c65b6a1843728bf1ce37feb1}{Set\+Dimensions}} (int \+\_\+\+Nx, int \+\_\+\+Nu, int \+\_\+\+Ny, int \+\_\+\+Nw, int \+\_\+\+Nv)
+\begin{DoxyCompactList}\small\item\em Define dimensions of system variables and adjust size of model parameters accordingly. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ae05f2373bda70c910c2ed0ce072b1938}{Process\+Model}} (Eigen\+::\+Vector\+Xd \&X, Eigen\+::\+Vector\+Xd \&U, Eigen\+::\+Vector\+Xd \&W)
+\begin{DoxyCompactList}\small\item\em Compute process model to update state vector {\ttfamily X} (in place). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96b1aa9499678aa3e6eeb205a02d3f37}{Measurement\+Model}} (Eigen\+::\+Vector\+Xd \&Y, Eigen\+::\+Vector\+Xd \&X, Eigen\+::\+Vector\+Xd \&V)
+\begin{DoxyCompactList}\small\item\em Compute system output {\ttfamily Y} from measurement model. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}{A}}
+\begin{DoxyCompactList}\small\item\em Process model transition matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}{B}}
+\begin{DoxyCompactList}\small\item\em Process model input matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}{C}}
+\begin{DoxyCompactList}\small\item\em Measurement model matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}{Q}}
+\begin{DoxyCompactList}\small\item\em Process model noise covariance matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}{R}}
+\begin{DoxyCompactList}\small\item\em Measurement model noise covariance matrix. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}{X0}}
+\begin{DoxyCompactList}\small\item\em Inicial state vector distribution mean vector parameter. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}{P0}}
+\begin{DoxyCompactList}\small\item\em Inicial state vector distribution covariance matrix parameter. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}{Nx}}
+\begin{DoxyCompactList}\small\item\em Number of state variables in X vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0}{Nu}}
+\begin{DoxyCompactList}\small\item\em Number of inputs in U vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}{Ny}}
+\begin{DoxyCompactList}\small\item\em Number of measurements in Y vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa79f143468ed38fc47f5c9c7f1d4179b}{Nw}}
+\begin{DoxyCompactList}\small\item\em Number of process noise in W vector. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_af4404612ae418d30e56bc36c504b3141}{Nv}}
+\begin{DoxyCompactList}\small\item\em Number of measurement noise in V vector. \end{DoxyCompactList}\item 
+std\+::vector$<$ bool $>$ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}{X\+\_\+isangle}}
+\begin{DoxyCompactList}\small\item\em Indicates which entries of X vector are angles in rad, for correct computation of correction equation. \end{DoxyCompactList}\item 
+std\+::vector$<$ bool $>$ \mbox{\hyperlink{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}{Y\+\_\+isangle}}
+\begin{DoxyCompactList}\small\item\em Indicates which entries of Y vector are angles in rad, for correct computation of innovation vector. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the parameters of a discrete time, generic linear state space model\+: ~\newline
+ 
+
+\begin{DoxyVerb}    x(k) = A*x(k-1) + B*u(k) + w(k) {Process equation}
+
+    y(k) = C*x(k) + v(k) {Measurement equation}
+\end{DoxyVerb}
+ with {\ttfamily x(k)} being state variables vector, {\ttfamily u(k)} measurement vector and {\ttfamily y(k)} measurement vector. Also, {\ttfamily w(k)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(0,\+Q)} and {\ttfamily v(k)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(0,\+R)} are respectively process and measurement noises.
+
+This class contains only model parameters and evaluations of process and measurement equations. In case {\ttfamily w(k)} and/or {\ttfamily v(k)} are dependent of other noise sources, {\ttfamily Q} and {\ttfamily R} should consider the correct propagation from noise sources covariances.
+
+Initial state is a random variable following {\ttfamily x(0)} \texorpdfstring{$\sim$}{\string~} {\ttfamily N(\+X0,\+P0)} 
+
+Also dim(x) = {\ttfamily Nx}, dim(u) = {\ttfamily Nu}, dim(y) = {\ttfamily Ny}, dim(w) = {\ttfamily Nw}, dim(v) = {\ttfamily Nv}. These dimensions should be first stablished by calling {\ttfamily Set\+Dimmensions()}, which make resizing of system parameters. After that, since parameters are public, they can be set at any time.
+
+Angular measurements in radians need special treatment when computing innovation vector in filters using {\ttfamily atan2} function. In order to do this, {\ttfamily Y\+\_\+isangle} is used to indicate which components of {\ttfamily Y} are angles, which should be set as {\ttfamily true} by the user when initializing the model.
+
+For the same reason, every change in state vector containing angles in some entries should me donne properly. Thus, {\ttfamily X\+\_\+isangle} is used to indicate which components of {\ttfamily x} are angles, which should be set as {\ttfamily true} by the user when initializing the model. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a96b1aa9499678aa3e6eeb205a02d3f37}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a96b1aa9499678aa3e6eeb205a02d3f37} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!MeasurementModel@{MeasurementModel}}
+\index{MeasurementModel@{MeasurementModel}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{MeasurementModel()}{MeasurementModel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Measurement\+Model (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{Y,  }\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{Eigen\+::\+Vector\+Xd \&}]{V }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute system output {\ttfamily Y} from measurement model. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em Y} & the computed output \\
+\hline
+\mbox{\texttt{ in}}  & {\em X} & state vector with {\ttfamily x(k)} \\
+\hline
+\mbox{\texttt{ in}}  & {\em V} & current sample of measurement noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_ae05f2373bda70c910c2ed0ce072b1938}\label{classBayesianFiltering_1_1StateSpaceLinearModel_ae05f2373bda70c910c2ed0ce072b1938} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!ProcessModel@{ProcessModel}}
+\index{ProcessModel@{ProcessModel}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{ProcessModel()}{ProcessModel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceBayesianFiltering_a566eaf28424d5f10e0f955fef0950287}{Result}} Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Process\+Model (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector\+Xd \&}]{X,  }\item[{Eigen\+::\+Vector\+Xd \&}]{U,  }\item[{Eigen\+::\+Vector\+Xd \&}]{W }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute process model to update state vector {\ttfamily X} (in place). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em X} & state vector with {\ttfamily x}(k-\/1) to be updated to {\ttfamily x(k)} \\
+\hline
+\mbox{\texttt{ in}}  & {\em U} & input vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em W} & current sample of process noise \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_afa39d7f8c65b6a1843728bf1ce37feb1}\label{classBayesianFiltering_1_1StateSpaceLinearModel_afa39d7f8c65b6a1843728bf1ce37feb1} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!SetDimensions@{SetDimensions}}
+\index{SetDimensions@{SetDimensions}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{SetDimensions()}{SetDimensions()}}
+{\footnotesize\ttfamily void Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Set\+Dimensions (\begin{DoxyParamCaption}\item[{int}]{\+\_\+\+Nx,  }\item[{int}]{\+\_\+\+Nu,  }\item[{int}]{\+\_\+\+Ny,  }\item[{int}]{\+\_\+\+Nw,  }\item[{int}]{\+\_\+\+Nv }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Define dimensions of system variables and adjust size of model parameters accordingly. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nx} & Number of state variables in X vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nu} & Number of inputs in U vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Ny} & Number of measurements in Y vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nw} & Number of process noise in W vector \\
+\hline
+\mbox{\texttt{ in}}  & {\em \+\_\+\+Nv} & Number of measurement noise in V vector \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a1e9fbfabf2567705dfeb928672a250a7} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!A@{A}}
+\index{A@{A}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{A}{A}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::A}
+
+
+
+Process model transition matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f}\label{classBayesianFiltering_1_1StateSpaceLinearModel_ad1772c6e9ae9dab1e83234c7001dd90f} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!B@{B}}
+\index{B@{B}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{B}{B}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::B}
+
+
+
+Process model input matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91}\label{classBayesianFiltering_1_1StateSpaceLinearModel_af76bb77c2f526518074732ad88713f91} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!C@{C}}
+\index{C@{C}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{C}{C}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::C}
+
+
+
+Measurement model matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0}\label{classBayesianFiltering_1_1StateSpaceLinearModel_af501a0c3bc6ab9f1aefd08a13bb934d0} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Nu@{Nu}}
+\index{Nu@{Nu}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Nu}{Nu}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Nu}
+
+
+
+Number of inputs in U vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_af4404612ae418d30e56bc36c504b3141}\label{classBayesianFiltering_1_1StateSpaceLinearModel_af4404612ae418d30e56bc36c504b3141} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Nv@{Nv}}
+\index{Nv@{Nv}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Nv}{Nv}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Nv}
+
+
+
+Number of measurement noise in V vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_aa79f143468ed38fc47f5c9c7f1d4179b}\label{classBayesianFiltering_1_1StateSpaceLinearModel_aa79f143468ed38fc47f5c9c7f1d4179b} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Nw@{Nw}}
+\index{Nw@{Nw}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Nw}{Nw}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Nw}
+
+
+
+Number of process noise in W vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a33e8f4b37ffc962d7b40355a998221a9} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Nx@{Nx}}
+\index{Nx@{Nx}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Nx}{Nx}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Nx}
+
+
+
+Number of state variables in X vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a1503c7a4474b50fc3dc90101a5632379} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Ny@{Ny}}
+\index{Ny@{Ny}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Ny}{Ny}}
+{\footnotesize\ttfamily int Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Ny}
+
+
+
+Number of measurements in Y vector. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c}\label{classBayesianFiltering_1_1StateSpaceLinearModel_afe57f3ae2087fa02235a8014ff480e0c} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!P0@{P0}}
+\index{P0@{P0}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{P0}{P0}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+P0}
+
+
+
+Inicial state vector distribution covariance matrix parameter. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a3609252743f188b8de6e62c4d552f230} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Q@{Q}}
+\index{Q@{Q}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Q}{Q}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::Q}
+
+
+
+Process model noise covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a96f0f7c35d35c9684cccd73211cd0ab4} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!R@{R}}
+\index{R@{R}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{R}{R}}
+{\footnotesize\ttfamily Eigen\+::\+Matrix\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::R}
+
+
+
+Measurement model noise covariance matrix. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89}\label{classBayesianFiltering_1_1StateSpaceLinearModel_aa7ec043efbe429b8662bc0bb63517d89} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!X0@{X0}}
+\index{X0@{X0}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{X0}{X0}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+X0}
+
+
+
+Inicial state vector distribution mean vector parameter. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b}\label{classBayesianFiltering_1_1StateSpaceLinearModel_a34ce74792ba36fa117d2f0878719674b} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!X\_isangle@{X\_isangle}}
+\index{X\_isangle@{X\_isangle}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{X\_isangle}{X\_isangle}}
+{\footnotesize\ttfamily std\+::vector$<$bool$>$ Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+X\+\_\+isangle}
+
+
+
+Indicates which entries of X vector are angles in rad, for correct computation of correction equation. 
+
+\Hypertarget{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238}\label{classBayesianFiltering_1_1StateSpaceLinearModel_aa6380c1e04128fe509bc35ef0367d238} 
+\index{BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}!Y\_isangle@{Y\_isangle}}
+\index{Y\_isangle@{Y\_isangle}!BayesianFiltering::StateSpaceLinearModel@{BayesianFiltering::StateSpaceLinearModel}}
+\doxysubsubsection{\texorpdfstring{Y\_isangle}{Y\_isangle}}
+{\footnotesize\ttfamily std\+::vector$<$bool$>$ Bayesian\+Filtering\+::\+State\+Space\+Linear\+Model\+::\+Y\+\_\+isangle}
+
+
+
+Indicates which entries of Y vector are angles in rad, for correct computation of innovation vector. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{bayesianfiltering_8hpp}{bayesianfiltering.\+hpp}}\end{DoxyCompactItemize}
