@@ -1,7 +1,0 @@
-<map id="BayesianFiltering::AdaptiveKalmanFilter" name="BayesianFiltering::AdaptiveKalmanFilter">
-<area shape="rect" id="Node000001" title="Adaptive Kalman filter, with Q and R matrices changing when every measurement comes according two use..." alt="" coords="5,181,168,221"/>
-<area shape="rect" id="Node000002" href="$classBayesianFiltering_1_1LinearBayesianFilter.html" title="Base class of Bayesian filters for state space linear models. See derived classes." alt="" coords="9,93,164,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,147,89,181,84,181,84,147"/>
-<area shape="rect" id="Node000003" href="$classBayesianFiltering_1_1BayesianFilter.html" title="Base class of minimum variables of a Bayesian stochastic filter. All derived classes present filters ..." alt="" coords="15,5,158,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,59,89,93,84,93,84,59"/>
-</map>
